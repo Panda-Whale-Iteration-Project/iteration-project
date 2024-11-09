@@ -7,38 +7,39 @@ import connectDB from './db.js';
 import { setupAuthRoutes } from './auth.js';
 import dotenv from 'dotenv';
 
+//require routes files
+const userRouter = require('./routes/userRouter.js')
+const trialRouter = require('./routes/trialRouter.js')
+const subscriptionRouter = require('./routes/subscriptionRouter.js')
+
 const app = express();
 mongoose.set('strictQuery', true);
 
-const MG_URI =
-	'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/';
-mongoose.connect(MG_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connection.once('open', () => {
-	console.log('ArmaDollar Saver at your service!');
-});
+// Connect to MongoDB
+connectDB()
+  .then(() => {
+    console.log('✅ Database connected successfully');
+  })
+  .catch((err) => {
+    console.error('❌ Database connection error:', err);
+    process.exit(1);
+  });
+
 
 // Load environment variables
 dotenv.config();
-
-
-// let server;
-
-// // Connect to MongoDB
-// connectDB()
-//   .then(() => {
-//     console.log('✅ Database connected successfully');
-//   })
-//   .catch((err) => {
-//     console.error('❌ Database connection error:', err);
-//     process.exit(1);
-//   });
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Session configuration
+// Route Handlers
+app.use('/user', userRouter);
+app.use('/subscription', subscriptionRouter);
+app.use('/trial', trialRouter);
+
+// Session configuration - user session stored in cookie for 24 hours
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
@@ -75,6 +76,11 @@ app.get('/dashboard', (req, res) => {
   }
 });
 
+// Unknown Route Handler
+app.use('*', (_req, res) => {
+  res.status(404).send('Not Found');
+});
+
 // Error handling middleware
 app.use((err, _req, res, _next) => {
   console.error('Error:', err);
@@ -85,6 +91,8 @@ app.use((err, _req, res, _next) => {
 });
 
 // Start server
+let server;
+
 const PORT = process.env.PORT || 3000;
 server = app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
