@@ -7,11 +7,11 @@ router.post('/', trialController.createTrial, (req, res) => {
   res.status(200).json('create trial');
 });
 
-router.put('/', trialController.updateTrial, (req, res) => {
+router.put('/:_id', trialController.updateTrial, (req, res) => {
   res.status(200).json('update trial');
 });
 
-router.delete('/', trialController.deleteTrial, (req,res)=> {
+router.delete('/:_id', trialController.deleteTrial, (req,res)=> {
     res.status(200).json('deleted trial');
 })
 

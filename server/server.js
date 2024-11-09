@@ -83,11 +83,16 @@ app.use('*', (_req, res) => {
 
 // Error handling middleware
 app.use((err, _req, res, _next) => {
-	console.error('Error:', err);
-	res.status(500).json({
-		success: false,
-		message: 'Internal server error',
-	});
+	
+	const defaultErr = {
+		log: 'Error occurred at unknown middleware',
+		status: 500,
+		message: { err: 'An Error occurred.' }
+	}
+
+	const customErr = Object.assign({}, defaultErr, err);
+	console.error(customErr.log);
+	return res.status(customErr.status).json(customErr.message);
 });
 
 // Start server

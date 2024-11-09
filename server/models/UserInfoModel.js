@@ -17,14 +17,14 @@ const userInfoSchema = new Schema ({
 		type: String,
 		required: [true, 'Please input your email'],
 	},
-	subscriptionsID: {
+	subscriptionsID: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Subscriptions',
-	}, // This referred to the 'Subscriptions' model by '_id' property created in SubscriptionsModel.js
-	trialsID: {
+	}], // This referred to the 'Subscriptions' model by '_id' property created in SubscriptionsModel.js
+	trialsID: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Trials',
-	}, // This referred to the 'Trials' model by '_id' property created in TrialsModel.js
+	}], // This referred to the 'Trials' model by '_id' property created in TrialsModel.js
   Budget: Number
 });
 
