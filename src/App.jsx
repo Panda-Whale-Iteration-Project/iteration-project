@@ -1,5 +1,5 @@
 import React from 'react';
-
+import HompageContainer from './components/HomepageContainer.jsx';
 function App() {
   return (
     <div className='min-h-screen bg-gradient-to-br from-pink-100 to-pink-200 flex flex-col items-center justify-center gap-6'>
@@ -14,6 +14,7 @@ function App() {
       >
         Sign in with Google
       </button>
+      <HompageContainer />
     </div>
   );
 }
