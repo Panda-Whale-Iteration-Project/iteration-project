@@ -7,21 +7,31 @@ import connectDB from './db.js';
 import { setupAuthRoutes } from './auth.js';
 import dotenv from 'dotenv';
 
+const app = express();
+mongoose.set('strictQuery', true);
+
+const MG_URI =
+	'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/';
+mongoose.connect(MG_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connection.once('open', () => {
+	console.log('ArmaDollar Saver at your service!');
+});
+
 // Load environment variables
 dotenv.config();
 
-const app = express();
-let server;
 
-// Connect to MongoDB
-connectDB()
-  .then(() => {
-    console.log('✅ Database connected successfully');
-  })
-  .catch((err) => {
-    console.error('❌ Database connection error:', err);
-    process.exit(1);
-  });
+// let server;
+
+// // Connect to MongoDB
+// connectDB()
+//   .then(() => {
+//     console.log('✅ Database connected successfully');
+//   })
+//   .catch((err) => {
+//     console.error('❌ Database connection error:', err);
+//     process.exit(1);
+//   });
 
 // Middleware
 app.use(express.json());
@@ -49,7 +59,7 @@ app.use(passport.session());
 setupAuthRoutes(app);
 
 // Basic route for testing
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('Server is running');
 });
 
@@ -66,7 +76,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   console.error('Error:', err);
   res.status(500).json({
     success: false,
