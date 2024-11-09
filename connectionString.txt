@@ -1,0 +1,4 @@
+Atlas Server Username: PinkFairyArmadillo
+Atlas Server Password: F5E0BmkMuHIFFhas
+
+MG_URI: mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/
