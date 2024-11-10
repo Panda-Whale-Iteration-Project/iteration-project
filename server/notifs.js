@@ -1,6 +1,6 @@
-// notifications.js
 import nodemailer from 'nodemailer';
 import cron from 'node-cron';
+import { MongoClient, ObjectId } from 'mongodb';
 
 class NotificationService {
   constructor() {
@@ -13,99 +13,179 @@ class NotificationService {
         pass: process.env.SMTP_PASS,
       },
     });
-  }
 
-  async sendEmail(user, subscription) {
-    const daysUntilDue = this.calculateDaysUntilDue(
-      subscription.nextPaymentDate
+    this.dbClient = new MongoClient(
+      'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/'
     );
 
-    return await this.transporter.sendMail({
-      from: '"Subscription Manager" <notifications@yourapp.com>',
-      to: user.email,
-      subject: `Payment Due in ${daysUntilDue} Days`,
-      html: `
-        <h2>Payment Reminder</h2>
-        <p>Hello ${user.name},</p>
-        <p>Your subscription for ${subscription.serviceName} is due in ${daysUntilDue} days.</p>
-        <p>Amount due: $${subscription.amount}</p>
-        <p>Due date: ${subscription.nextPaymentDate}</p>
-        <a href="https://yourapp.com/subscriptions/${subscription.id}">View Subscription</a>
-      `,
+    // Initialize cron job in constructor
+    this.initCronJob();
+  }
+
+  initCronJob() {
+    cron.schedule('*/2 * * * *', async () => {
+      console.log('⏰ Cron job triggered at:', new Date().toLocaleString());
+      try {
+        await this.checkAndNotify();
+      } catch (error) {
+        console.error('❌ Error in cron job:', error);
+      }
     });
+    console.log('🚀 Notification service initialized with 2-minute schedule');
   }
 
-  calculateDaysUntilDue(nextPaymentDate) {
-    const now = new Date();
-    const dueDate = new Date(nextPaymentDate);
-    const diffTime = Math.abs(dueDate - now);
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  generateEmailHTML(user, subscriptions) {
+    const totalAmount = subscriptions.reduce((sum, sub) => sum + sub.amount, 0);
+    const subscriptionList = subscriptions
+      .map(
+        (sub) => `
+        <tr>
+          <td style="padding: 10px; border-bottom: 1px solid #eee;">${sub.serviceName}</td>
+          <td style="padding: 10px; border-bottom: 1px solid #eee;">$${sub.amount.toFixed(2)}</td>
+          <td style="padding: 10px; border-bottom: 1px solid #eee;">${new Date(sub.nextPaymentDate).toLocaleDateString()}</td>
+        </tr>
+      `
+      )
+      .join('');
+
+    return `
+      <h2>Upcoming Subscription Payments</h2>
+      <p>Hello ${user.name},</p>
+      <p>You have ${subscriptions.length} subscription${subscriptions.length > 1 ? 's' : ''} due for payment in 3 days:</p>
+      
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+          <tr style="background-color: #f8f9fa;">
+            <th style="padding: 10px; text-align: left;">Service</th>
+            <th style="padding: 10px; text-align: left;">Amount</th>
+            <th style="padding: 10px; text-align: left;">Due Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${subscriptionList}
+        </tbody>
+        <tfoot>
+          <tr style="font-weight: bold; background-color: #f8f9fa;">
+            <td style="padding: 10px;">Total</td>
+            <td style="padding: 10px;" colspan="2">$${totalAmount.toFixed(2)}</td>
+          </tr>
+        </tfoot>
+      </table>
+      
+      <p>Please ensure you have sufficient funds available for these payments.</p>
+      <p><a href="https://yourapp.com/subscriptions">View All Subscriptions</a></p>
+    `;
   }
 
-  // Function to check and send notifications
-  async checkAndNotify() {
+  async sendEmail(user, subscriptions) {
     try {
-      // Get all active subscriptions with upcoming payments
-      const subscriptions = await Subscription.findAll({
-        where: {
-          status: 'active',
-          nextPaymentDate: {
-            [Op.between]: [
-              new Date(),
-              new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Next 7 days
-            ],
-          },
-        },
-        include: [
-          {
-            model: User,
-            attributes: ['email', 'name', 'notificationPreferences'],
-          },
-        ],
+      const result = await this.transporter.sendMail({
+        from: '"Subscription Manager" <garrettlchow@gmail.com>',
+        to: user.email,
+        subject: `${subscriptions.length} Subscription${subscriptions.length > 1 ? 's' : ''} Due in 3 Days`,
+        html: this.generateEmailHTML(user, subscriptions),
       });
 
-      // Send notifications for each subscription
-      for (const subscription of subscriptions) {
-        const daysUntilDue = this.calculateDaysUntilDue(
-          subscription.nextPaymentDate
-        );
+      console.log(
+        `✉️ Email sent to ${user.email} for ${subscriptions.length} subscriptions`
+      );
+      return result;
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw error;
+    }
+  }
 
-        // Check user notification preferences
-        if (
-          this.shouldSendNotification(
-            subscription.User.notificationPreferences,
-            daysUntilDue
-          )
-        ) {
-          await this.sendEmail(subscription.User, subscription);
+  async checkAndNotify() {
+    console.log(
+      '🔍 Starting notification check at:',
+      new Date().toLocaleString()
+    );
 
-          // Log notification
-          await NotificationLog.create({
-            userId: subscription.userId,
-            subscriptionId: subscription.id,
+    try {
+      await this.dbClient.connect();
+      const db = this.dbClient.db();
+
+      const threeDaysFromNow = new Date();
+      threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+      threeDaysFromNow.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(threeDaysFromNow);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      console.log(
+        '🎯 Checking for subscriptions due on:',
+        threeDaysFromNow.toLocaleDateString()
+      );
+
+      const subscriptions = await db
+        .collection('test-subscriptions')
+        .find({
+          status: 'active',
+          nextPaymentDate: {
+            $gte: threeDaysFromNow,
+            $lt: endOfDay,
+          },
+        })
+        .toArray();
+
+      console.log(
+        `📊 Found ${subscriptions.length} subscriptions due for notification`
+      );
+
+      const subscriptionsByUser = subscriptions.reduce((acc, subscription) => {
+        const userIdString = subscription.userId.toString();
+        if (!acc[userIdString]) {
+          acc[userIdString] = [];
+        }
+        acc[userIdString].push(subscription);
+        return acc;
+      }, {});
+
+      for (const [userId, userSubscriptions] of Object.entries(
+        subscriptionsByUser
+      )) {
+        const user = await db.collection('test-users').findOne({
+          _id: new ObjectId(userId),
+        });
+
+        if (user) {
+          console.log(`👤 Processing notifications for user: ${user.name}`);
+          await this.sendEmail(user, userSubscriptions);
+
+          await db.collection('notification-logs').insertOne({
+            userId: user._id,
+            subscriptionIds: userSubscriptions.map((sub) => sub._id),
             type: 'payment_reminder',
+            subscriptionCount: userSubscriptions.length,
+            totalAmount: userSubscriptions.reduce(
+              (sum, sub) => sum + sub.amount,
+              0
+            ),
             sentAt: new Date(),
           });
         }
       }
+
+      console.log('✅ Notification check completed successfully');
     } catch (error) {
-      console.error('Error in notification service:', error);
+      console.error('❌ Error in notification service:', error);
+      throw error;
+    } finally {
+      await this.dbClient.close();
     }
   }
 
-  shouldSendNotification(preferences, daysUntilDue) {
-    // Example notification rules
-    const defaultRules = [7, 3, 1]; // Days before payment
-    const userRules = preferences?.reminderDays || defaultRules;
-    return userRules.includes(daysUntilDue);
+  async cleanup() {
+    try {
+      await this.dbClient.close();
+      console.log('💾 Database connection closed');
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+    }
   }
 }
 
-// Schedule notification checks
+// Create and export both the class and an instance
 const notificationService = new NotificationService();
-cron.schedule('0 9 * * *', () => {
-  // Run daily at 9 AM
-  notificationService.checkAndNotify();
-});
-
-export default NotificationService;
+export default notificationService;
