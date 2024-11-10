@@ -6,22 +6,22 @@ import mongoose from 'mongoose';
 import connectDB from './db.js';
 import { setupAuthRoutes } from './auth.js';
 import dotenv from 'dotenv';
+import notificationService from './notifs.js';
 
 const app = express();
 mongoose.set('strictQuery', true);
 
 const MG_URI =
-	'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/';
+  'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/';
 mongoose.connect(MG_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => {
-	console.log('ArmaDollar Saver at your service!');
+  console.log('ArmaDollar Saver at your service!');
 });
 
 // Load environment variables
 dotenv.config();
 
-
-// let server;
+let server;
 
 // // Connect to MongoDB
 // connectDB()
