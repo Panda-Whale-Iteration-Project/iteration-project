@@ -17,7 +17,7 @@ subscriptionController.createSubscription = async (req, res, next) => {
     return next ({
       log: 'Error in \'createSubscription\' middleware: ' + err,
       status: 500,
-      message: { err: 'An error occurred while creating new subscription'}
+      message: { err: 'An error occurred while creating a new subscription'}
     });
   };
 };
