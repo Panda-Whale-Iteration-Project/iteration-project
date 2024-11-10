@@ -169,8 +169,9 @@ const AddNewFormDisplay = () => {
   );
 };
 
-/*
 export default AddNewFormDisplay;
+
+/*
 NOTIFICATION TOGGLE
           <label class='inline-flex items-center cursor-pointer w-full md:w-1/2 px-3'>
             <input type='checkbox' value='' class='sr-only peer'></input>
