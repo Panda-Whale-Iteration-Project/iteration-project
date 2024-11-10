@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import cron from 'node-cron';
 import { MongoClient, ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 
 class NotificationService {
   constructor() {
@@ -13,10 +14,6 @@ class NotificationService {
         pass: process.env.SMTP_PASS,
       },
     });
-
-    this.dbClient = new MongoClient(
-      'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/'
-    );
 
     // Initialize cron job in constructor
     this.initCronJob();
@@ -80,7 +77,7 @@ class NotificationService {
   async sendEmail(user, subscriptions) {
     try {
       const result = await this.transporter.sendMail({
-        from: '"Subscription Manager" <garrettlchow@gmail.com>',
+        from: '"Armadollar Saver" <garrettlchow@gmail.com>',
         to: user.email,
         subject: `${subscriptions.length} Subscription${subscriptions.length > 1 ? 's' : ''} Due in 3 Days`,
         html: this.generateEmailHTML(user, subscriptions),
@@ -103,8 +100,7 @@ class NotificationService {
     );
 
     try {
-      await this.dbClient.connect();
-      const db = this.dbClient.db();
+      const db = mongoose.connection.db;
 
       const threeDaysFromNow = new Date();
       threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
@@ -171,17 +167,6 @@ class NotificationService {
     } catch (error) {
       console.error('❌ Error in notification service:', error);
       throw error;
-    } finally {
-      await this.dbClient.close();
-    }
-  }
-
-  async cleanup() {
-    try {
-      await this.dbClient.close();
-      console.log('💾 Database connection closed');
-    } catch (error) {
-      console.error('Error during cleanup:', error);
     }
   }
 }
