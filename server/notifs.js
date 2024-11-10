@@ -15,7 +15,6 @@ class NotificationService {
       },
     });
 
-    // Initialize cron job in constructor
     this.initCronJob();
   }
 
@@ -109,11 +108,6 @@ class NotificationService {
       const endOfDay = new Date(threeDaysFromNow);
       endOfDay.setHours(23, 59, 59, 999);
 
-      console.log(
-        '🎯 Checking for subscriptions due on:',
-        threeDaysFromNow.toLocaleDateString()
-      );
-
       const subscriptions = await db
         .collection('test-subscriptions')
         .find({
@@ -122,6 +116,16 @@ class NotificationService {
             $gte: threeDaysFromNow,
             $lt: endOfDay,
           },
+          $or: [
+            { lastNotificationSent: null },
+            {
+              lastNotificationSent: {
+                $lt: new Date(
+                  threeDaysFromNow.getTime() - 30 * 24 * 60 * 60 * 1000
+                ),
+              },
+            },
+          ],
         })
         .toArray();
 
@@ -149,9 +153,24 @@ class NotificationService {
           console.log(`👤 Processing notifications for user: ${user.name}`);
           await this.sendEmail(user, userSubscriptions);
 
+          // Calculate next payment date (30 days from current nextPaymentDate)
+          const subscriptionIds = userSubscriptions.map((sub) => sub._id);
+          await db.collection('test-subscriptions').updateMany(
+            { _id: { $in: subscriptionIds } },
+            {
+              $set: {
+                lastNotificationSent: new Date(),
+                nextPaymentDate: new Date(
+                  threeDaysFromNow.getTime() + 30 * 24 * 60 * 60 * 1000
+                ),
+                updatedAt: new Date(),
+              },
+            }
+          );
+
           await db.collection('notification-logs').insertOne({
             userId: user._id,
-            subscriptionIds: userSubscriptions.map((sub) => sub._id),
+            subscriptionIds: subscriptionIds,
             type: 'payment_reminder',
             subscriptionCount: userSubscriptions.length,
             totalAmount: userSubscriptions.reduce(
@@ -171,6 +190,5 @@ class NotificationService {
   }
 }
 
-// Create and export both the class and an instance
 const notificationService = new NotificationService();
 export default notificationService;

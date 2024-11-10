@@ -55,7 +55,7 @@ const generateSampleData = () => {
 
   const subscriptions = subscriptionIds.map((subId, index) => {
     const service = services[index % services.length];
-    const userId = userIds[Math.floor(index / 3)]; // Each user gets 3 subscriptions
+    const userId = userIds[Math.floor(index / 3)];
 
     const lastPaymentDate = new Date(threeDaysFromNow);
     lastPaymentDate.setMonth(lastPaymentDate.getMonth() - 1);
@@ -68,9 +68,9 @@ const generateSampleData = () => {
       status: 'active',
       billingCycle: 'monthly',
       nextPaymentDate: threeDaysFromNow,
-      lastPaymentDate: lastPaymentDate,
       category: service.category,
       notifyDaysBefore: 3,
+      lastNotificationSent: null,
       createdAt: new Date(lastPaymentDate),
       updatedAt: new Date(),
     };
