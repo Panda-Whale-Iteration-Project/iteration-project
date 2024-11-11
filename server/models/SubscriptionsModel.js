@@ -56,10 +56,6 @@ const subscriptionSchema = new Schema(
       type: Number,
       default: 3,
     },
-    lastNotificationSent: {
-      type: Date,
-      default: null,
-    },
     createdAt: {
       type: Date,
       default: Date.now,

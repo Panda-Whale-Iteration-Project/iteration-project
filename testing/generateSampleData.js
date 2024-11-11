@@ -66,7 +66,6 @@ const generateSampleData = () => {
       nextPaymentDate: threeDaysFromNow,
       category: service.category,
       notifyDaysBefore: 3,
-      lastNotificationSent: null,
       createdAt: new Date(lastPaymentDate),
       updatedAt: new Date(),
     };
