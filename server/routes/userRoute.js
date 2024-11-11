@@ -7,7 +7,7 @@ import userController from '../controllers/UserController.js';
 //   Do something...
 // });
 
-userRouter.get('/', userController.getUser, (_req, res) => {
+userRouter.get('/:id', userController.getUser, (_req, res) => {
   res.status(200).json({
     user: res.locals.foundUser,
     subscriptions: res.locals.subscriptions,

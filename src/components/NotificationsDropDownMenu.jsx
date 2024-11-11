@@ -11,7 +11,7 @@ const NotificationsDropDownMenu = ({ closeDropDown, setDropDownSelection }) => {
   return (
     <div>
       <div
-        className='right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+        className='right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-20'
         aria-orientation='vertical'
         aria-labelledby='menu-button'
         tabIndex='-1'
@@ -51,7 +51,7 @@ const NotificationsDropDownMenu = ({ closeDropDown, setDropDownSelection }) => {
             id='social'
             onClick={() => handleClick('1 week before')}
           >
-            1 week before
+            7 days before
           </a>
         </div>
       </div>

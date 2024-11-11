@@ -3,6 +3,8 @@ import Subscription from '../models/SubscriptionsModel.js';
 const subscriptionController = {};
 
 // subscriptionController middlewares
+
+//create a new subscription for a given user
 subscriptionController.createSubscription = async (req, res, next) => {
   const {
     userId,
@@ -26,6 +28,7 @@ subscriptionController.createSubscription = async (req, res, next) => {
       category,
       notifyDaysBefore,
     });
+    //will return the new subscription
     res.locals.newSub = newSub;
     return next();
   } catch (err) {
@@ -37,6 +40,7 @@ subscriptionController.createSubscription = async (req, res, next) => {
   }
 };
 
+//update existing subscription by subscription ID
 subscriptionController.updateSubscription = async (req, res, next) => {
   const { _id } = req.params;
   const {
@@ -63,7 +67,7 @@ subscriptionController.updateSubscription = async (req, res, next) => {
       },
       { new: true }
     );
-
+    //will return the updated subscription details
     res.locals.updatedSub = updatedSub;
     return next();
   } catch (err) {
@@ -75,6 +79,7 @@ subscriptionController.updateSubscription = async (req, res, next) => {
   }
 };
 
+//delete specific subscription based on subscription ID
 subscriptionController.deleteSubscription = async (req, res, next) => {
   const { _id } = req.params;
 

@@ -5,9 +5,11 @@ import Trial from '../models/TrialsModel.js';
 const userController = {};
 
 // userController middlewares
+
+//get a user and all their subscriptions/trials based on user ID
 userController.getUser = async (req, res, next) => {
   //grab userID from auth redirect
-  const userID = req.subscriptionUserId;
+  const userID = req.params.id;
 
   try {
     // const foundUser = await User.findById(_id, 'name email');
@@ -21,7 +23,7 @@ userController.getUser = async (req, res, next) => {
     // res.locals.foundUser = foundUser;
     // return next();
 
-    await User.findOne({ _id: userID }).then((result) => {
+    await User.findOne({ _id: ObjectId(userID) }).then((result) => {
       //if no matching user was found
       if (result === null) {
         return next({
@@ -44,7 +46,7 @@ userController.getUser = async (req, res, next) => {
 
   //get all of users' subscriptions
   try {
-    await Subscription.find({ userId: userID }).then(
+    await Subscription.find({ userId: ObjectId(userID) }).then(
       (result) => (res.locals.subscriptions = result)
     );
   } catch (error) {
@@ -59,7 +61,7 @@ userController.getUser = async (req, res, next) => {
 
   //get all of users' trials
   try {
-    const trials = await Trial.find({ userId: userID });
+    const trials = await Trial.find({ userId: ObjectId(userID) });
     res.locals.trials = trials;
     return next();
   } catch (error) {

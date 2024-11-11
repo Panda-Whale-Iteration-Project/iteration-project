@@ -1,6 +1,7 @@
 // The TrialContainer will list all trials,
 // while each TrialDisplay will render the details for each free trial, similar to SubscriptionDisplay.
 
+
 import React from 'react';
 import TrialDisplay from './TrialDisplay.jsx';
 

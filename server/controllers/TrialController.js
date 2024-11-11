@@ -3,6 +3,8 @@ import Trials from '../models/TrialsModel.js';
 const trialController = {};
 
 // trialController middlewares
+
+//create new free trial for a given user ID
 trialController.createTrial = async (req, res, next) => {
   const { userId, trialName, expDate, notifyDate, subCost, category, detail } =
     req.body;
@@ -29,6 +31,7 @@ trialController.createTrial = async (req, res, next) => {
   }
 };
 
+//update information for an existing trial based on trial ID
 trialController.updateTrial = async (req, res, next) => {
   const { _id } = req.params;
   const { trialName, expDate, notifyDate, subCost, category, detail } =
@@ -51,6 +54,7 @@ trialController.updateTrial = async (req, res, next) => {
   }
 };
 
+//delete existing trial based on trial id
 trialController.deleteTrial = async (req, res, next) => {
   const { _id } = req.params;
   try {

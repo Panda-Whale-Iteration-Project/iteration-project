@@ -36,19 +36,19 @@ const subscriptionSchema = new Schema(
       type: String,
       required: true,
       enum: [
-        'entertainment', // Netflix, Spotify, Disney+, etc.
-        'productivity', // Microsoft 365, Adobe CC, etc.
-        'utilities', // AWS, hosting services, etc.
-        'gaming', // Xbox Game Pass, PlayStation Plus, etc.
-        'education', // Coursera, Udemy, etc.
-        'health_fitness', // Peloton, MyFitnessPal Premium, etc.
-        'news_media', // NYTimes, WSJ, etc.
-        'shopping', // Amazon Prime, Costco, etc.
-        'social_media', // LinkedIn Premium, Twitter Blue, etc.
-        'security', // VPN services, password managers, etc.
-        'food_delivery', // DoorDash, Uber Eats Pass, etc.
-        'storage', // Google Drive, Dropbox, iCloud, etc.
-        'other', // Catch-all for misc subscriptions
+        'Entertainment', // Netflix, Spotify, Disney+, etc.
+        'Productivity', // Microsoft 365, Adobe CC, etc.
+        'Utilities', // AWS, hosting services, etc.
+        'Gaming',
+        'Education',
+        'Health and fitness', // Peloton, MyFitnessPal Premium, etc.
+        'News and media', // NYTimes, WSJ, etc.
+        'Shopping', // Amazon Prime, Costco, etc.
+        'Social media', // LinkedIn Premium, Twitter Blue, etc.
+        'Security',
+        'Storage',
+        'Food delivery', // DoorDash, Uber Eats Pass, etc.
+        'Other', // Catch-all for misc subscriptions
       ],
       default: 'other',
     },
