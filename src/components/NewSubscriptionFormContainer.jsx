@@ -2,20 +2,21 @@ import React from 'react';
 import AddNewTitleDisplay from './AddNewTitleDisplay.jsx'
 import AddNewFormDisplay from './AddNewFormDisplay.jsx'
 
+// Pop up container
 const NewSubscriptionFormContainer = ({ closePopup }) => {
   return (
-    <div className='fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50 border-indigo-600'>
-      <div className='bg-white p-8 rounded-lg shadow-lg w-96'>
+    <div className='fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-65 z-50'>
+      <div className='bg-white p-8 rounded-lg shadow-lg w-1/3'>
         {/* Close button */}
         <button
-          className='p-2 text-gray-600 border border-indigo-600'
+          className='p-2 text-gray-600'
           onClick={closePopup}
         >
           X
         </button>
-        {/* The New Subscription Form */}
+        {/* Title and form */}
         <AddNewTitleDisplay />
-        <AddNewFormDisplay />
+        <AddNewFormDisplay closePopup={closePopup}/>
       </div>
     </div>
   );

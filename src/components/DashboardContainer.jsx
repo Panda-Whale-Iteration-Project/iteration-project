@@ -15,12 +15,10 @@ const DashboardContainer = () => {
 	const [PopUpVisibility, setPopUpVisibility] = useState(false);
 
 	const openPopup = () => {
-    console.log('Button was clicked and pop up should be visible');
     setPopUpVisibility(true);
   };
 
 	const closePopup = () => {
-		console.log('Pop up should close')
 		setPopUpVisibility(false);
 	};
 
@@ -40,13 +38,10 @@ const DashboardContainer = () => {
         <BudgetContainer />
         <AddNewButton onOpen={openPopup} />
 
-        {/* Conditionally render the popup */}
+        {/* Conditionally Render the Popup */}
         {PopUpVisibility && (
-          <div className='fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50'>
-            <div className='bg-black p-8 rounded-lg shadow-lg w-96 relative'> 
-              {/* Pass the close function to the sub form container */}
-              <NewSubscriptionFormContainer closePopup={closePopup} />
-            </div>
+          <div>
+            <NewSubscriptionFormContainer closePopup={closePopup} />
           </div>
         )}
       </div>
