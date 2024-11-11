@@ -5,10 +5,26 @@ const userController = {};
 // subscriptionController middlewares
 userController.getUser = async (req, res, next) => {
   //how do we grab user info from front-end?
-  const userEmail = 'idkkk';
+  // Mark: You can grab a user by _id or param endpoint from req.params (Check comments in userRoute.js)
+
+  // const { _id } = req.params (If param endpoint is :_id)
+  // const { email } = req.params (If param endpoint is :email)
+
+  const userEmail = 'idkkk'; 
   
   try {
-    await UserInfo.findOne({email: userEmail})
+    // const foundUser = await User.findById(_id, 'name email');
+    // if (!user) return next ({
+    //   log: 'findOne query returned null in getUser - email not found in DB',
+    //   status: 404,
+    //   message: {
+    //     err: `No user found in database with email ${foundUser}`
+    //   } 
+    // });
+    // res.locals.foundUser = foundUser;
+    // return next();
+    
+    await User.findOne({email: userEmail})
     .then((result) => {
     
       //if no matching user was found
@@ -52,7 +68,7 @@ userController.createUser = async (req, res, next) => {
 
   //DB query to create user
   try {
-  await UserInfo.create({firstName, lastName, email, phoneNumber, budget, subscriptionsID: [], trialsID:[] })
+  await User.create({firstName, lastName, email, phoneNumber, budget, subscriptionsID: [], trialsID:[] })
   .then((result) => {
     res.locals.createdUser = result;
   })
