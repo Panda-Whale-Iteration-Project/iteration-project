@@ -2,10 +2,10 @@ import { MongoClient, ObjectId } from 'mongodb';
 
 const generateSampleData = () => {
   // Generate consistent ObjectIds for testing
-  const userIds = Array(6) // Increased to 6 to include your test user
+  const userIds = Array(6)
     .fill()
     .map(() => new ObjectId());
-  const subscriptionIds = Array(18) // Increased to 18 to give test user 3 subscriptions
+  const subscriptionIds = Array(18)
     .fill()
     .map(() => new ObjectId());
 
@@ -13,10 +13,8 @@ const generateSampleData = () => {
     // Your test user first
     {
       _id: userIds[0],
-      name: 'Garrett Chow', // Replace with your name if you'd like
-      email: 'chowg@uci.edu', // Replace with your email
-      subscriptionCount: 3,
-      totalMonthlySpend: 45.97,
+      name: 'Garrett Chow',
+      email: 'chowg@uci.edu',
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -25,8 +23,6 @@ const generateSampleData = () => {
       _id: userId,
       name: `User ${index + 1}`,
       email: `user${index + 1}@example.com`,
-      subscriptionCount: 3,
-      totalMonthlySpend: 29.99 * index + 50,
       createdAt: new Date(),
       updatedAt: new Date(),
     })),
@@ -70,7 +66,6 @@ const generateSampleData = () => {
       nextPaymentDate: threeDaysFromNow,
       category: service.category,
       notifyDaysBefore: 3,
-      lastNotificationSent: null,
       createdAt: new Date(lastPaymentDate),
       updatedAt: new Date(),
     };
