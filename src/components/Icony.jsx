@@ -1,5 +1,5 @@
 import React from 'react';
-import armadillo from '../assets/armadillo.png';  // Make sure the image path is correct
+import armadillo from '../assets/logo.png';  // Make sure the image path is correct
 
 const Icony = () => (
   <div className="w-12 h-12">

@@ -4,7 +4,7 @@ const trialController = {};
 
 // trialController middlewares
 
-//create new free trial for a given user ID
+//create new free trial for a given user ID (not currently hooked to front end)
 trialController.createTrial = async (req, res, next) => {
   const { userId, trialName, expDate, notifyDate, subCost, category, detail } =
     req.body;
@@ -31,7 +31,7 @@ trialController.createTrial = async (req, res, next) => {
   }
 };
 
-//update information for an existing trial based on trial ID
+//update information for an existing trial based on trial ID (not currently hooked to front end)
 trialController.updateTrial = async (req, res, next) => {
   const { _id } = req.params;
   const { trialName, expDate, notifyDate, subCost, category, detail } =
@@ -54,7 +54,7 @@ trialController.updateTrial = async (req, res, next) => {
   }
 };
 
-//delete existing trial based on trial id
+//delete existing trial based on trial id (not currently hooked to front end)
 trialController.deleteTrial = async (req, res, next) => {
   const { _id } = req.params;
   try {
