@@ -1,42 +1,53 @@
-const Trials = require('../models/TrialsModel');
+import Trials from '../models/TrialsModel.js';
 
 const trialController = {};
 
 // trialController middlewares
 trialController.createTrial = async (req, res, next) => {
-  const { trialName, expDate, notifyDate, subCost, category, detail } = req.body;
+  const { userId, trialName, expDate, notifyDate, subCost, category, detail } =
+    req.body;
 
   try {
-    const newTrial = Trials.create({ trialName, expDate, notifyDate, subCost, category, detail });
-    res.locals.newTrial = newTrial;
-    return next()
-  }
-
-  catch(err) {
-    return next ({
-      log: 'Error in \'createTrial\' middleware: ' + err,
-      status: 500,
-      message: { err: 'An error occurred while creating a new trial'}
+    const newTrial = Trials.create({
+      userId,
+      trialName,
+      expDate,
+      notifyDate,
+      subCost,
+      category,
+      detail,
     });
-  };
+
+    res.locals.newTrial = newTrial;
+    return next();
+  } catch (err) {
+    return next({
+      log: "Error in 'createTrial' middleware: " + err,
+      status: 500,
+      message: { err: 'An error occurred while creating a new trial' },
+    });
+  }
 };
 
 trialController.updateTrial = async (req, res, next) => {
   const { _id } = req.params;
-  const { trialName, expDate, notifyDate, subCost, category, detail } = req.body;
+  const { trialName, expDate, notifyDate, subCost, category, detail } =
+    req.body;
 
   try {
-    const updatedTrial = await Trials.findByIdAndUpdate(_id, { trialName, expDate, notifyDate, subCost, category, detail }, { new: true });
+    const updatedTrial = await Trials.findByIdAndUpdate(
+      _id,
+      { trialName, expDate, notifyDate, subCost, category, detail },
+      { new: true }
+    );
     res.locals.updatedTrial = updatedTrial;
     return next();
-  }
-
-  catch(err) {
-    return next ({
-      log: 'Error in \'updateTrial\' middleware',
+  } catch (err) {
+    return next({
+      log: "Error in 'updateTrial' middleware",
       status: 500,
-      message: { err: 'An error occurred while updating trial'}
-    })
+      message: { err: 'An error occurred while updating trial' },
+    });
   }
 };
 
@@ -46,15 +57,13 @@ trialController.deleteTrial = async (req, res, next) => {
     const deletedTrial = await Trials.findByIdAndDelete(_id);
     res.locals.deletedTrial = deletedTrial;
     return next();
-  }
-
-  catch(err) {
-    return next ({
-      log: 'Error in \'deleteTrial\' middleware',
+  } catch (err) {
+    return next({
+      log: "Error in 'deleteTrial' middleware",
       status: 500,
-      message: { err: 'An error occurred while deleting trial'}
+      message: { err: 'An error occurred while deleting trial' },
     });
-  };
+  }
 };
 
-module.exports = trialController;
+export default trialController;

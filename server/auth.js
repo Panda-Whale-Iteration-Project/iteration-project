@@ -3,6 +3,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import User from './models/UserModel.js';
+import userRouter from './routes/userRoute.js';
 
 // Load environment variables
 dotenv.config();
@@ -12,12 +13,12 @@ const requiredEnvVars = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'];
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
-	console.error(
-		'❌ Missing required environment variables:',
-		missingEnvVars.join(', ')
-	);
-	console.error('Please create a .env file with the required variables');
-	process.exit(1);
+  console.error(
+    '❌ Missing required environment variables:',
+    missingEnvVars.join(', ')
+  );
+  console.error('Please create a .env file with the required variables');
+  process.exit(1);
 }
 
 // UserLogin Schema for authentication
@@ -59,14 +60,25 @@ const UserLogin = mongoose.model('UserLogin', userLoginSchema);
 
 // Serialize user for the session
 passport.serializeUser((user, done) => {
-	done(null, user.id);
+  done(null, {
+    authUserId: user.authUser.id,
+    subscriptionUserId: user.subscriptionUser._id,
+  });
 });
 
 // Deserialize user from the session
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (serializedUser, done) => {
   try {
-    const user = await UserLogin.findById(id);
-    done(null, user);
+    const authUser = await UserLogin.findById(serializedUser.authUserId);
+    const subscriptionUser = await User.findById(
+      serializedUser.subscriptionUserId
+    );
+
+    if (!authUser || !subscriptionUser) {
+      return done(new Error('User not found'), null);
+    }
+
+    done(null, { authUser, subscriptionUser });
   } catch (err) {
     done(err, null);
   }
@@ -85,14 +97,23 @@ passport.use(
       try {
         // Check if authentication user already exists
         let authUser = await UserLogin.findOne({ googleId: profile.id });
+        let subscriptionUser;
 
         if (authUser) {
+          // Get the associated subscription user
+          subscriptionUser = await User.findById(authUser.subscriptionUserId);
+          if (!subscriptionUser) {
+            return done(
+              new Error('Associated subscription user not found'),
+              null
+            );
+          }
           console.log('✅ Existing user logged in:', authUser.email);
-          return done(null, authUser);
+          return done(null, { authUser, subscriptionUser });
         }
 
         // Check if a subscription user with this email already exists
-        let subscriptionUser = await User.findOne({
+        subscriptionUser = await User.findOne({
           email: profile.emails[0].value,
         });
 
@@ -125,7 +146,7 @@ passport.use(
         });
 
         console.log('✅ New auth user created and linked to subscription user');
-        done(null, authUser);
+        done(null, { authUser, subscriptionUser });
       } catch (err) {
         console.error('❌ Error in Google Strategy:', err);
         if (err.code === 11000) {
@@ -144,47 +165,50 @@ passport.use(
 
 // Auth routes
 const setupAuthRoutes = (app) => {
-	// Initialize session middleware
-	app.use(passport.session());
+  // Initialize session middleware
+  app.use(passport.session());
 
-	// Google OAuth routes
-	app.get(
-		'/auth/google',
-		(req, res, next) => {
-			console.log('📍 Initiating Google OAuth login...');
-			next();
-		},
-		passport.authenticate('google', { scope: ['profile', 'email'] })
-	);
+  // Google OAuth routes
+  app.get(
+    '/auth/google',
+    (req, res, next) => {
+      console.log('📍 Initiating Google OAuth login...');
+      next();
+    },
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+  );
 
-	app.get(
-		'/auth/google/callback',
-		passport.authenticate('google', { failureRedirect: '/login' }),
-		(req, res) => {
-			console.log('✅ Google OAuth callback successful');
-			res.redirect('/dashboard');
-		}
-	);
+  app.get(
+    '/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res, next) => {
+      // Add subscription user ID to request object
+      req.subscriptionUserId = req.user.subscriptionUser._id;
+      res.redirect('http://localhost:5173');
+      // next();
+    }
+    // userRouter.getUser,
+  );
 
-	// Logout route
-	app.get('/auth/logout', (req, res) => {
-		req.logout((err) => {
-			if (err) {
-				console.error('❌ Error during logout:', err);
-				return res.status(500).json({ error: 'Error logging out' });
-			}
-			console.log('👋 User logged out successfully');
-			res.redirect('/');
-		});
-	});
+  // Logout route
+  app.get('/auth/logout', (req, res) => {
+    req.logout((err) => {
+      if (err) {
+        console.error('❌ Error during logout:', err);
+        return res.status(500).json({ error: 'Error logging out' });
+      }
+      console.log('👋 User logged out successfully');
+      res.redirect('/');
+    });
+  });
 
-	// Test route to check authentication status
-	app.get('/auth/status', (req, res) => {
-		res.json({
-			authenticated: req.isAuthenticated(),
-			user: req.user,
-		});
-	});
+  // Test route to check authentication status
+  app.get('/auth/status', (req, res) => {
+    res.json({
+      authenticated: req.isAuthenticated(),
+      user: req.user,
+    });
+  });
 };
 
 export { setupAuthRoutes, UserLogin };
