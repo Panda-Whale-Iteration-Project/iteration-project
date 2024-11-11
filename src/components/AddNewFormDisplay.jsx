@@ -3,7 +3,7 @@ import { useState } from 'react';
 import CategoryDropDownMenu from './CategoryDropDownMenu';
 import NotificationsDropDownMenu from './NotificationsDropDownMenu';
 
-const AddNewFormDisplay = ({ closePopup }) => {
+const AddNewFormDisplay = ({ closePopup, userData }) => {
   // STATE INFO AND FUNCTIONS FOR CATEGORIES DROP DOWN MENU
   // DropDownVisibility determines if category drop down menu renders
   // DropDownSelection determines what text is populated based on category selection
@@ -101,11 +101,16 @@ const AddNewFormDisplay = ({ closePopup }) => {
       alert('Please fill out required fields');
     } else {
       const toSend = {
+        userId: userData.subscriptionUser._id,
         serviceName: formData.serviceName,
-        renewalDate: formData.paymentDate,
-        price: formData.subscriptionAmount,
-        category: dropDownVisibility ? dropDownSelection : '',
-        notifyDate: notificationsVisibility ? notificationSelection : '',
+        amount: parseInt(formData.subscriptionAmount),
+        status: 'active',
+        nextPaymentDate: formData.paymentDate,
+        category:
+          dropDownSelection != 'Select one' ? dropDownSelection : 'Other',
+        notifyDaysBefore: notificationsVisibility
+          ? parseInt(notificationSelection)
+          : '',
         details: formData.details,
       };
       console.log('Attempting to send to backend. Info submitted: ', toSend);
@@ -117,7 +122,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
 
       // Use async/await:
       try {
-        const response = await fetch('http://localhost:5173/subscription', {
+        const response = await fetch('http://localhost:3000/subscription', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -128,12 +133,15 @@ const AddNewFormDisplay = ({ closePopup }) => {
         const data = await response.json();
 
         if (!response.ok) {
-          `Server responded with a status ${response.status}: ${JSON.stringify(data)}`
+          `Server responded with a status ${response.status}: ${JSON.stringify(data)}`;
         }
 
         console.log(data);
-      } catch(err) {
-        console.error('Error occurred while adding new subscription: ', err.message);
+      } catch (err) {
+        console.error(
+          'Error occurred while adding new subscription: ',
+          err.message
+        );
       }
 
       /*
@@ -218,7 +226,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
           {/* SUBCRIPTION CATEGORY */}
           <div className='w-full md:w-1/2 px-3 mb-6 md:mb-0'>
             <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'>
-              Subscription Category
+              Category
             </label>
 
             {/* SUBCRIPTION CATEGORY BUTTON*/}
@@ -257,9 +265,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
                   />
                 </div>
               )}
-              <p className='text-gray-600 text-xs italic'>
-                Optional.
-              </p>
+              <p className='text-gray-600 text-xs italic'>Optional.</p>
             </div>
           </div>
         </div>
