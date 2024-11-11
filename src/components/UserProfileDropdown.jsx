@@ -1,7 +1,7 @@
 //This component will hold the user’s profile information (Name, Email, Phone) and a logout button.
 import React, { useState } from 'react';
 
-const UserProfileDropdown = () => {
+const UserProfileDropdown = ({ userData }) => {
 	const [open, setOpen] = useState(false);
 
 	return (

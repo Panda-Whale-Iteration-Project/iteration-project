@@ -41,13 +41,16 @@ const SubscriptionDisplay = ({ userData }) => {
 								{subscription.serviceName}
 							</h2>
 							<p>
+								<strong>Category: </strong>{subscription.category}
+							</p>
+							<p>
 								<strong>Amount: </strong>${subscription.amount}
 							</p>
 							<p>
-								<strong>Status: </strong>${subscription.status}
+								<strong>Status: </strong>{subscription.status}
 							</p>
 							<p>
-								<strong>Billing Cycle</strong>
+								<strong>Billing Cycle: </strong>{subscription.billingCycle}
 							</p>
 						</div>
 						<div className='flex space-x-2 mt-2'>
