@@ -12,12 +12,12 @@ const requiredEnvVars = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'];
 const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
-  console.error(
-    '❌ Missing required environment variables:',
-    missingEnvVars.join(', ')
-  );
-  console.error('Please create a .env file with the required variables');
-  process.exit(1);
+	console.error(
+		'❌ Missing required environment variables:',
+		missingEnvVars.join(', ')
+	);
+	console.error('Please create a .env file with the required variables');
+	process.exit(1);
 }
 
 // UserLogin Schema for authentication
@@ -59,7 +59,7 @@ const UserLogin = mongoose.model('UserLogin', userLoginSchema);
 
 // Serialize user for the session
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+	done(null, user.id);
 });
 
 // Deserialize user from the session
@@ -144,47 +144,47 @@ passport.use(
 
 // Auth routes
 const setupAuthRoutes = (app) => {
-  // Initialize session middleware
-  app.use(passport.session());
+	// Initialize session middleware
+	app.use(passport.session());
 
-  // Google OAuth routes
-  app.get(
-    '/auth/google',
-    (req, res, next) => {
-      console.log('📍 Initiating Google OAuth login...');
-      next();
-    },
-    passport.authenticate('google', { scope: ['profile', 'email'] })
-  );
+	// Google OAuth routes
+	app.get(
+		'/auth/google',
+		(req, res, next) => {
+			console.log('📍 Initiating Google OAuth login...');
+			next();
+		},
+		passport.authenticate('google', { scope: ['profile', 'email'] })
+	);
 
-  app.get(
-    '/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => {
-      console.log('✅ Google OAuth callback successful');
-      res.redirect('/dashboard');
-    }
-  );
+	app.get(
+		'/auth/google/callback',
+		passport.authenticate('google', { failureRedirect: '/login' }),
+		(req, res) => {
+			console.log('✅ Google OAuth callback successful');
+			res.redirect('/dashboard');
+		}
+	);
 
-  // Logout route
-  app.get('/auth/logout', (req, res) => {
-    req.logout((err) => {
-      if (err) {
-        console.error('❌ Error during logout:', err);
-        return res.status(500).json({ error: 'Error logging out' });
-      }
-      console.log('👋 User logged out successfully');
-      res.redirect('/');
-    });
-  });
+	// Logout route
+	app.get('/auth/logout', (req, res) => {
+		req.logout((err) => {
+			if (err) {
+				console.error('❌ Error during logout:', err);
+				return res.status(500).json({ error: 'Error logging out' });
+			}
+			console.log('👋 User logged out successfully');
+			res.redirect('/');
+		});
+	});
 
-  // Test route to check authentication status
-  app.get('/auth/status', (req, res) => {
-    res.json({
-      authenticated: req.isAuthenticated(),
-      user: req.user,
-    });
-  });
+	// Test route to check authentication status
+	app.get('/auth/status', (req, res) => {
+		res.json({
+			authenticated: req.isAuthenticated(),
+			user: req.user,
+		});
+	});
 };
 
 export { setupAuthRoutes, UserLogin };
