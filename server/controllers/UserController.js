@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import User from '../models/UserModel.js';
 import Subscription from '../models/SubscriptionsModel.js';
 import Trial from '../models/TrialsModel.js';
@@ -23,8 +24,9 @@ userController.getUser = async (req, res, next) => {
 		// res.locals.foundUser = foundUser;
 		// return next();
 
-		await User.findOne({ _id: userID }).then((result) => {
+		await User.findOne({ _id: mongoose.Types.ObjectId(userID) }).then((result) => {
 			//if no matching user was found
+			console.log('🤍found user: ', result);
 			if (result === null) {
 				return next({
 					log: 'findOne query returned null in getUser - email not found in DB',
@@ -46,9 +48,10 @@ userController.getUser = async (req, res, next) => {
 
 	//get all of users' subscriptions
 	try {
-		await Subscription.find({ userId: userID }).then(
-			(result) => (res.locals.subscriptions = result)
-		);
+		await Subscription.find({ userId: mongoose.Types.ObjectId(userID) }).then((result) => {
+			console.log('🎉found subscriptions: ', result);
+			res.locals.subscriptions = result;
+		});
 	} catch (error) {
 		return next({
 			log: error,

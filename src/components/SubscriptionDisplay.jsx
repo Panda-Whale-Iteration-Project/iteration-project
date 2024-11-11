@@ -1,3 +1,4 @@
+import { data } from 'autoprefixer';
 import React, { useEffect, useState } from 'react';
 
 const SubscriptionDisplay = ({ userData }) => {
@@ -15,7 +16,8 @@ const SubscriptionDisplay = ({ userData }) => {
 					throw new Error('Unable to fetch User data');
 				}
 				const data = await response.json();
-				setSubscriptionData(data.subscriptions);
+				
+				setSubscriptionData(data);
 			} catch (error) {
 				setError(error.message);
 			}
@@ -24,7 +26,7 @@ const SubscriptionDisplay = ({ userData }) => {
 	}, []);
 
 	console.log(subscriptionData);
-  
+
 	return (
 		<div className='border border-gray-200 p-3 mb-3 rounded flex justify-between items-center'>
 			<div>
