@@ -58,9 +58,9 @@ const AddNewFormDisplay = ({ closePopup }) => {
     serviceName: '',
     paymentDate: '',
     subscriptionAmount: 0,
-    subscriptionCategory: '',
+    // subscriptionCategory: dropDownSelection,
     notifications: false,
-    notificationFrequency: '',
+    // notificationFrequency: notificationSelection,
   });
 
   // Update form state as input changes
@@ -82,18 +82,26 @@ const AddNewFormDisplay = ({ closePopup }) => {
     subscriptionCategory: STRING
     notifications: BOOL
     notificationFrequency: ??
+    { serviceName, renewalDate, notifyDate, price, category, details } = req.body
   */
   // NOTE TO SELF: NEED TO MAKE CERTAIN FIELDS MANDATORY
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Attempting to send to backend. Info submitted: ', formData);
-
+    const toSend = {
+      serviceName: formData.serviceName,
+      renewalDate: formData.paymentDate,
+      price: formData.subscriptionAmount,
+      category: dropDownVisibility ? dropDownSelection : '',
+      notifyDate: formData.notifications ? notificationSelection : '',
+    };
+    console.log('Attempting to send to backend. Info submitted: ', toSend);
+   
     // Send post request to backend with form state as body
     fetch('/subscription', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        body: JSON.stringify(formData),
+        body: JSON.stringify(toSend),
       },
       /*
       GETTING AN ERROR HERE
@@ -121,6 +129,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
               name='serviceName'
               type='text'
               onChange={handleInputChange}
+              autoComplete='off'
             ></input>
 
             <p className='text-gray-500 text-xs italic'>
