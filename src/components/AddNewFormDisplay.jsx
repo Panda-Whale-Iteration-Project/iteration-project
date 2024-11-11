@@ -4,6 +4,7 @@ import CategoryDropDownMenu from './CategoryDropDownMenu';
 import NotificationsDropDownMenu from './NotificationsDropDownMenu';
 
 const AddNewFormDisplay = ({ closePopup }) => {
+  // STATE INFO AND FUNCTIONS FOR CATEGORIES DROP DOWN MENU
   // DropDownVisibility determines if category drop down menu renders
   // DropDownSelection determines what text is populated based on category selection
   const [dropDownVisibility, setDropDownVisibility] = useState(false);
@@ -20,6 +21,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
     setDropDownVisibility(false);
   };
 
+  // STATE INFO AND FUNCTIONS FOR NOTIFICATIONS TOGGLE AND DROP DOWN MENU
   // NotificationsVisibility determines if notification options render
   // NotificationsDropDownVisibility determines if notifications drop down menu renders
   // notificationSelection determines what text is populated based on category selection
@@ -50,6 +52,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
     setnotificationsDropDownVisibility(false);
   };
 
+  // STATE INFO AND FUNCTIONS FOR FORM DATA
   // State for form data
   const [formData, setFormData] = useState({
     serviceName: '',
@@ -60,7 +63,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
     notificationFrequency: '',
   });
 
-  // update state as form input changes, accessing field by name
+  // Update form state as input changes
   const handleInputChange = (e) => {
     console.log('input change');
     const { name, value } = e.target;
@@ -80,18 +83,25 @@ const AddNewFormDisplay = ({ closePopup }) => {
     notifications: BOOL
     notificationFrequency: ??
   */
-
+  // NOTE TO SELF: NEED TO MAKE CERTAIN FIELDS MANDATORY
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submit button was clicked. Info submitted: ', formData);
+    console.log('Attempting to send to backend. Info submitted: ', formData);
 
     // Send post request to backend with form state as body
     fetch('/subscription', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        body: JSON.stringify(formData)
-      }
+        body: JSON.stringify(formData),
+      },
+      /*
+      GETTING AN ERROR HERE
+      AddNewFormDisplay.jsx:89 
+       POST http://localhost:5173/subscription net::ERR_ABORTED 404 (Not Found)
+      */
+    }).then(() => {
+      console.log('succesfully sent to backend');
     });
     closePopup();
   };

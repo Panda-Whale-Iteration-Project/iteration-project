@@ -4,8 +4,7 @@ import DashboardContainer from '../components/DashboardContainer.jsx';
 const HomepageContainer = () => {
 	return (
 		<div className='border border-indigo-600'>
-			<TitleDisplay />
-			<UserInfo />
+			{/* <TitleDisplay /> */}
 			<DashboardContainer />
 		</div>
 	);
@@ -19,14 +18,6 @@ const TitleDisplay = () => {
 					ArmaDollar Saver
 				</span>
 			</h1>
-		</div>
-	);
-};
-
-const UserInfo = () => {
-	return (
-		<div className='border border-indigo-600'>
-			<h1>UserInfo</h1>
 		</div>
 	);
 };
