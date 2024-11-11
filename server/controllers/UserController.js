@@ -24,7 +24,7 @@ userController.getUser = async (req, res, next) => {
 		// res.locals.foundUser = foundUser;
 		// return next();
 
-		await User.findOne({ _id: mongoose.Types.ObjectId(userID) }).then((result) => {
+		await User.findById({ userID }).then((result) => {
 			//if no matching user was found
 			console.log('🤍found user: ', result);
 			if (result === null) {
@@ -48,10 +48,12 @@ userController.getUser = async (req, res, next) => {
 
 	//get all of users' subscriptions
 	try {
-		await Subscription.find({ userId: mongoose.Types.ObjectId(userID) }).then((result) => {
-			console.log('🎉found subscriptions: ', result);
-			res.locals.subscriptions = result;
-		});
+		await Subscription.find({ userId: mongoose.Types.ObjectId(userID) }).then(
+			(result) => {
+				console.log('🎉found subscriptions: ', result);
+				res.locals.subscriptions = result;
+			}
+		);
 	} catch (error) {
 		return next({
 			log: error,
