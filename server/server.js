@@ -11,6 +11,7 @@ import dotenv from 'dotenv';
 const userRouter = require('./routes/userRouter.js')
 const trialRouter = require('./routes/trialRouter.js')
 const subscriptionRouter = require('./routes/subscriptionRouter.js')
+import notificationService from './notifs.js';
 
 const app = express();
 mongoose.set('strictQuery', true);
@@ -24,7 +25,6 @@ connectDB()
     console.error('❌ Database connection error:', err);
     process.exit(1);
   });
-
 
 // Load environment variables
 dotenv.config();

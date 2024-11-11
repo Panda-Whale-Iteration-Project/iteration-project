@@ -6,7 +6,7 @@ const connectDB = async () => {
   const MG_URI =
 	'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/';
   
-  mongoose.connect(MG_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+  await mongoose.connect(MG_URI, { useNewUrlParser: true, useUnifiedTopology: true });
   mongoose.connection.once('open', () => {
     console.log('ArmaDollar Saver at your service!');
   });
