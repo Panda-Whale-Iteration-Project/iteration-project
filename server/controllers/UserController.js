@@ -10,7 +10,7 @@ const userController = {};
 //get a user and all their subscriptions/trials based on user ID
 userController.getUser = async (req, res, next) => {
 	//grab userID from auth redirect
-	const userID = req.params.id;
+	const userID = req.params._id;
 
 	try {
 		// const foundUser = await User.findById(_id, 'name email');
@@ -24,7 +24,7 @@ userController.getUser = async (req, res, next) => {
 		// res.locals.foundUser = foundUser;
 		// return next();
 
-		await User.findById({ userID }).then((result) => {
+		await User.findById({ _id: userID }).then((result) => {
 			//if no matching user was found
 			console.log('🤍found user: ', result);
 			if (result === null) {
@@ -48,7 +48,7 @@ userController.getUser = async (req, res, next) => {
 
 	//get all of users' subscriptions
 	try {
-		await Subscription.find({ userId: mongoose.Types.ObjectId(userID) }).then(
+		await Subscription.find({ userId: userID }).then(
 			(result) => {
 				console.log('🎉found subscriptions: ', result);
 				res.locals.subscriptions = result;

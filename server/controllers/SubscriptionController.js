@@ -40,7 +40,7 @@ subscriptionController.createSubscription = async (req, res, next) => {
 	}
 };
 
-//update existing subscription by subscription ID
+//update existing subscription by subscription ID (not currently hooked to front end)
 subscriptionController.updateSubscription = async (req, res, next) => {
 	const { _id } = req.params;
 	const {
@@ -79,7 +79,7 @@ subscriptionController.updateSubscription = async (req, res, next) => {
 	}
 };
 
-//delete specific subscription based on subscription ID
+//delete specific subscription based on subscription ID (not currently hooked to front end)
 subscriptionController.deleteSubscription = async (req, res, next) => {
 	const { _id } = req.params;
 
