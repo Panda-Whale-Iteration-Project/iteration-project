@@ -1,8 +1,8 @@
-// auth.js
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import User from './models/UserModel.js';
 
 // Load environment variables
 dotenv.config();
@@ -20,21 +20,42 @@ if (missingEnvVars.length > 0) {
   process.exit(1);
 }
 
-// User Schema
-const userSchema = new mongoose.Schema({
-  googleId: String,
-  email: String,
-  displayName: String,
-  firstName: String,
-  lastName: String,
-  profilePhoto: String,
-  createdAt: {
-    type: Date,
-    default: Date.now,
+// UserLogin Schema for authentication
+const userLoginSchema = new mongoose.Schema(
+  {
+    googleId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    displayName: String,
+    firstName: String,
+    lastName: String,
+    profilePhoto: String,
+    subscriptionUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
-const User = mongoose.model('User', userSchema);
+const UserLogin = mongoose.model('UserLogin', userLoginSchema);
 
 // Serialize user for the session
 passport.serializeUser((user, done) => {
@@ -44,7 +65,7 @@ passport.serializeUser((user, done) => {
 // Deserialize user from the session
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findById(id);
+    const user = await UserLogin.findById(id);
     done(null, user);
   } catch (err) {
     done(err, null);
@@ -62,28 +83,59 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Check if user already exists
-        let user = await User.findOne({ googleId: profile.id });
+        // Check if authentication user already exists
+        let authUser = await UserLogin.findOne({ googleId: profile.id });
 
-        if (user) {
-          console.log('✅ Existing user logged in:', user.email);
-          return done(null, user);
+        if (authUser) {
+          console.log('✅ Existing user logged in:', authUser.email);
+          return done(null, authUser);
         }
 
-        // If not, create new user
-        user = await User.create({
+        // Check if a subscription user with this email already exists
+        let subscriptionUser = await User.findOne({
+          email: profile.emails[0].value,
+        });
+
+        if (!subscriptionUser) {
+          // Create new subscription user if doesn't exist
+          subscriptionUser = await User.create({
+            name: profile.displayName,
+            email: profile.emails[0].value,
+          });
+          console.log(
+            '✅ New subscription user created:',
+            subscriptionUser.email
+          );
+        } else {
+          console.log(
+            '✅ Found existing subscription user:',
+            subscriptionUser.email
+          );
+        }
+
+        // Create new authentication user and link to subscription user
+        authUser = await UserLogin.create({
           googleId: profile.id,
           email: profile.emails[0].value,
           displayName: profile.displayName,
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           profilePhoto: profile.photos[0].value,
+          subscriptionUserId: subscriptionUser._id,
         });
 
-        console.log('✅ New user created:', user.email);
-        done(null, user);
+        console.log('✅ New auth user created and linked to subscription user');
+        done(null, authUser);
       } catch (err) {
         console.error('❌ Error in Google Strategy:', err);
+        if (err.code === 11000) {
+          // Handle duplicate key error
+          console.error('Email already exists in UserLogin collection');
+          return done(
+            new Error('Email already associated with another account'),
+            null
+          );
+        }
         done(err, null);
       }
     }
@@ -135,4 +187,4 @@ const setupAuthRoutes = (app) => {
   });
 };
 
-export { setupAuthRoutes, User };
+export { setupAuthRoutes, UserLogin };
