@@ -21,20 +21,20 @@ const DashboardContainer = ({ userData }) => {
     setPopUpVisibility(false);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          'http://localhost:3000/user/673180385659763608645a3f'
-        );
-        const data = await response.json();
-        //setsubscriptions data
-      } catch (error) {
-        console.error('Error fetching subscriptions:', error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         'http://localhost:3000/user/673180385659763608645a3f'
+  //       );
+  //       const data = await response.json();
+  //       //setsubscriptions data
+  //     } catch (error) {
+  //       console.error('Error fetching subscriptions:', error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   return (
     <div className='flex flex-col items-center bg-gray-100 min-h-screen p-4'>
