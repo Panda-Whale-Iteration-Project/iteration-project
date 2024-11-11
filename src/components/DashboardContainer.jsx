@@ -53,7 +53,10 @@ const DashboardContainer = ({ userData }) => {
         {/* Conditionally Render the Popup */}
         {PopUpVisibility && (
           <div>
-            <NewSubscriptionFormContainer closePopup={closePopup} />
+            <NewSubscriptionFormContainer
+              closePopup={closePopup}
+              userData={userData}
+            />
           </div>
         )}
       </div>

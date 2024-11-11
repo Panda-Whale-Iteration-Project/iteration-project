@@ -18,7 +18,7 @@ subscriptionController.createSubscription = async (req, res, next) => {
   } = req.body;
 
   try {
-    const newSub = await Subscriptions.create({
+    const newSub = await Subscription.create({
       userId,
       serviceName,
       amount,
@@ -54,7 +54,7 @@ subscriptionController.updateSubscription = async (req, res, next) => {
   } = req.body;
 
   try {
-    const updatedSub = await Subscriptions.findByIdAndUpdate(
+    const updatedSub = await Subscription.findByIdAndUpdate(
       _id,
       {
         serviceName,
@@ -84,7 +84,7 @@ subscriptionController.deleteSubscription = async (req, res, next) => {
   const { _id } = req.params;
 
   try {
-    const deletedSub = Subscriptions.findByIdAndDelete(_id);
+    const deletedSub = Subscription.findByIdAndDelete(_id);
     res.locals.deletedSub = deletedSub;
     return next();
   } catch (err) {

@@ -23,7 +23,7 @@ userController.getUser = async (req, res, next) => {
     // res.locals.foundUser = foundUser;
     // return next();
 
-    await User.findOne({ _id: ObjectId(userID) }).then((result) => {
+    await User.findOne({ _id: userID }).then((result) => {
       //if no matching user was found
       if (result === null) {
         return next({
@@ -46,7 +46,7 @@ userController.getUser = async (req, res, next) => {
 
   //get all of users' subscriptions
   try {
-    await Subscription.find({ userId: ObjectId(userID) }).then(
+    await Subscription.find({ userId: userID }).then(
       (result) => (res.locals.subscriptions = result)
     );
   } catch (error) {
@@ -61,7 +61,7 @@ userController.getUser = async (req, res, next) => {
 
   //get all of users' trials
   try {
-    const trials = await Trial.find({ userId: ObjectId(userID) });
+    const trials = await Trial.find({ userId: userID });
     res.locals.trials = trials;
     return next();
   } catch (error) {
