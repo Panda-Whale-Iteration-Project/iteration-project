@@ -54,20 +54,20 @@ const AddNewFormDisplay = ({ closePopup }) => {
 
   // STATE INFO AND FUNCTIONS FOR FORM DATA
   // State for form data
-  
+
   // Mark: make sure the labels are consistent throughout all files
   const [formData, setFormData] = useState({
     serviceName: '',
     paymentDate: '', //renewalDate
     subscriptionAmount: 0, //price
+    details: '',
     // subscriptionCategory: dropDownSelection,
-    notifications: false,
+    // notifications: false,
     // notificationFrequency: notificationSelection,
   });
 
   // Update form state as input changes
   const handleInputChange = (e) => {
-    console.log('input change: ', e.target.value);
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -86,64 +86,75 @@ const AddNewFormDisplay = ({ closePopup }) => {
     notificationFrequency: ??
     { serviceName, renewalDate, notifyDate, price, category, details } = req.body
   */
-  // NOTE TO SELF: NEED TO MAKE CERTAIN FIELDS MANDATORY
-  
+
   // Mark:
   // REQUIRED FIELDS: serviceName, renewalDate, notifyDate, price (Might change notifyDate so that it's not required)
   // OPTIONAL FIELDS: category, details
-  const handleSubmit = /* async */ (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !formData.serviceName ||
+      !formData.paymentDate ||
+      !formData.subscriptionAmount ||
+      (notificationsVisibility && notificationSelection == 'Select one')
+    ) {
+      alert('Please fill out required fields');
+    } else {
+      const toSend = {
+        serviceName: formData.serviceName,
+        renewalDate: formData.paymentDate,
+        price: formData.subscriptionAmount,
+        category: dropDownVisibility ? dropDownSelection : '',
+        notifyDate: notificationsVisibility ? notificationSelection : '',
+        details: formData.details,
+      };
+      console.log('Attempting to send to backend. Info submitted: ', toSend);
 
-    const toSend = {
-      serviceName: formData.serviceName,
-      renewalDate: formData.paymentDate,
-      price: formData.subscriptionAmount,
-      category: dropDownVisibility ? dropDownSelection : '',
-      notifyDate: formData.notifications ? notificationSelection : '',
-    };
-    console.log('Attempting to send to backend. Info submitted: ', toSend);
-   
-    // Send post request to backend with form state as body
-    
-    // Mark:
-    // Need Backend controllers to test this
+      // Send post request to backend with form state as body
 
-    // Use async/await:
-    // try {
-    //   const response = await fetch('http://localhost:5173/subscription', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(formData);
-    //   });
+      // Mark:
+      // Need Backend controllers to test this
 
-    //   const data = await response.json();
-      
-    //   if (!response.ok) {
-    //     `Server responded with a status ${response.status}: ${JSON.stringify(data)}`
-    //   }
+      // Use async/await:
+      try {
+        const response = await fetch('http://localhost:5173/subscription', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(toSend),
+        });
 
-    //   console.log(data);
-    // } catch(err) {
-    //   console.error('Error occurred while adding new subscription: ', err.message);
-    // }
+        const data = await response.json();
 
-    fetch('/subscription', {  // Need to put in the whole string of url, not just the endpoint
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        body: JSON.stringify(toSend),
-      },
+        if (!response.ok) {
+          `Server responded with a status ${response.status}: ${JSON.stringify(data)}`
+        }
+
+        console.log(data);
+      } catch(err) {
+        console.error('Error occurred while adding new subscription: ', err.message);
+      }
+
       /*
-      GETTING AN ERROR HERE
-      AddNewFormDisplay.jsx:89 
-       POST http://localhost:5173/subscription net::ERR_ABORTED 404 (Not Found)
+      fetch('/subscription', {
+        // Need to put in the whole string of url, not just the endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          body: JSON.stringify(toSend),
+        },
+    
+      // GETTING AN ERROR HERE
+      // AddNewFormDisplay.jsx:89 
+      //  POST http://localhost:5173/subscription net::ERR_ABORTED 404 (Not Found)
+    
+      }).then(() => {
+        console.log('succesfully sent to backend');
+      });
       */
-    }).then(() => {
-      console.log('succesfully sent to backend');
-    });
-    closePopup();
+      closePopup();
+    }
   };
 
   return (
@@ -247,13 +258,31 @@ const AddNewFormDisplay = ({ closePopup }) => {
                 </div>
               )}
               <p className='text-gray-600 text-xs italic'>
-                Please fill out this field.
+                Optional.
               </p>
             </div>
           </div>
         </div>
 
         {/* THIRD ROW OF ELEMENTS */}
+        <div className='flex flex-wrap -mx-3 mb-6'>
+          {/* DETAILS TEXT BOX */}
+          <div className='w-full md:full px-3 mb-6 md:mb-0'>
+            <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'>
+              Details
+            </label>
+            <input
+              className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+              name='details'
+              type='text'
+              onChange={handleInputChange}
+              autoComplete='off'
+            ></input>
+            <p className='text-gray-600 text-xs italic'>Optional.</p>
+          </div>
+        </div>
+
+        {/* FOURTH ROW OF ELEMENTS */}
         <div className='flex flex-wrap -mx-3 mb-6'>
           {/* NOTIFICATIONS TOGGLE */}
           <div className='w-full md:w-1/2 px-3 mb-6 md:mb-0'>
@@ -274,7 +303,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
           </div>
         </div>
 
-        {/* OPTIONAL FOURTH ROW OF ELEMENTS, VISIBILITY DEPENDS ON NOTIFICATION TOGGLE*/}
+        {/* OPTIONAL FIFTH ROW OF ELEMENTS, VISIBILITY DEPENDS ON NOTIFICATION TOGGLE*/}
         {notificationsVisibility && (
           <div className='flex flex-wrap -mx-3 mb-6'>
             {/* NOTIFICATION FREQUENCY/REMINDER DATE */}
