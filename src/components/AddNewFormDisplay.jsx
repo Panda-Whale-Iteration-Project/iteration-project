@@ -3,7 +3,7 @@ import { useState } from 'react';
 import CategoryDropDownMenu from './CategoryDropDownMenu';
 import NotificationsDropDownMenu from './NotificationsDropDownMenu';
 
-const AddNewFormDisplay = ({ closePopup }) => {
+const AddNewFormDisplay = ({ closePopup, userData }) => {
   // STATE INFO AND FUNCTIONS FOR CATEGORIES DROP DOWN MENU
   // DropDownVisibility determines if category drop down menu renders
   // DropDownSelection determines what text is populated based on category selection
@@ -55,13 +55,16 @@ const AddNewFormDisplay = ({ closePopup }) => {
   // STATE INFO AND FUNCTIONS FOR FORM DATA
   // State for form data
 
+
   // Mark: make sure the labels are consistent throughout all files
   const [formData, setFormData] = useState({
     serviceName: '',
     paymentDate: '', //renewalDate
     subscriptionAmount: 0, //price
     details: '',
+    details: '',
     // subscriptionCategory: dropDownSelection,
+    // notifications: false,
     // notifications: false,
     // notificationFrequency: notificationSelection,
   });
@@ -87,6 +90,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
     { serviceName, renewalDate, notifyDate, price, category, details } = req.body
   */
 
+
   // Mark:
   // REQUIRED FIELDS: serviceName, renewalDate, notifyDate, price (Might change notifyDate so that it's not required)
   // OPTIONAL FIELDS: category, details
@@ -101,19 +105,21 @@ const AddNewFormDisplay = ({ closePopup }) => {
       alert('Please fill out required fields');
     } else {
       const toSend = {
+        userId: userData.subscriptionUser._id,
         serviceName: formData.serviceName,
-        renewalDate: formData.paymentDate,
-        price: parseInt(formData.subscriptionAmount),
-        category: dropDownSelection!='Select one' ? dropDownSelection : '',
-        notifyDate: notificationsVisibility ? parseInt(notificationSelection) : '',
+        amount: parseInt(formData.subscriptionAmount),
+        status: 'active',
+        nextPaymentDate: formData.paymentDate,
+        category:
+          dropDownSelection != 'Select one' ? dropDownSelection : 'Other',
+        notifyDaysBefore: notificationsVisibility
+          ? parseInt(notificationSelection)
+          : '',
         details: formData.details,
       };
       console.log('Attempting to send to backend. Info submitted: ', toSend);
 
       // Send post request to backend with form state as body
-
-      // Mark:
-      // Need Backend controllers to test this
 
       // Use async/await:
       try {
@@ -124,7 +130,6 @@ const AddNewFormDisplay = ({ closePopup }) => {
           },
           body: JSON.stringify(toSend),
         });
-
         const data = await response.json();
 
         if (!response.ok) {
@@ -138,7 +143,8 @@ const AddNewFormDisplay = ({ closePopup }) => {
           err.message
         );
       }
-
+      closePopup();
+    }
       /*
       fetch('/subscription', {
         // Need to put in the whole string of url, not just the endpoint
@@ -158,7 +164,6 @@ const AddNewFormDisplay = ({ closePopup }) => {
       */
       closePopup();
     }
-  };
 
   return (
     <div className='flex justify-center items-center p-10'>
@@ -369,6 +374,6 @@ const AddNewFormDisplay = ({ closePopup }) => {
       </form>
     </div>
   );
-};
+}
 
 export default AddNewFormDisplay;
