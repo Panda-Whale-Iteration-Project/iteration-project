@@ -54,10 +54,12 @@ const AddNewFormDisplay = ({ closePopup }) => {
 
   // STATE INFO AND FUNCTIONS FOR FORM DATA
   // State for form data
+  
+  // Mark: make sure the labels are consistent throughout all files
   const [formData, setFormData] = useState({
     serviceName: '',
-    paymentDate: '',
-    subscriptionAmount: 0,
+    paymentDate: '', //renewalDate
+    subscriptionAmount: 0, //price
     // subscriptionCategory: dropDownSelection,
     notifications: false,
     // notificationFrequency: notificationSelection,
@@ -65,7 +67,7 @@ const AddNewFormDisplay = ({ closePopup }) => {
 
   // Update form state as input changes
   const handleInputChange = (e) => {
-    console.log('input change');
+    console.log('input change: ', e.target.value);
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -85,8 +87,13 @@ const AddNewFormDisplay = ({ closePopup }) => {
     { serviceName, renewalDate, notifyDate, price, category, details } = req.body
   */
   // NOTE TO SELF: NEED TO MAKE CERTAIN FIELDS MANDATORY
-  const handleSubmit = (e) => {
+  
+  // Mark:
+  // REQUIRED FIELDS: serviceName, renewalDate, notifyDate, price (Might change notifyDate so that it's not required)
+  // OPTIONAL FIELDS: category, details
+  const handleSubmit = /* async */ (e) => {
     e.preventDefault();
+
     const toSend = {
       serviceName: formData.serviceName,
       renewalDate: formData.paymentDate,
@@ -97,7 +104,32 @@ const AddNewFormDisplay = ({ closePopup }) => {
     console.log('Attempting to send to backend. Info submitted: ', toSend);
    
     // Send post request to backend with form state as body
-    fetch('/subscription', {
+    
+    // Mark:
+    // Need Backend controllers to test this
+
+    // Use async/await:
+    // try {
+    //   const response = await fetch('http://localhost:5173/subscription', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(formData);
+    //   });
+
+    //   const data = await response.json();
+      
+    //   if (!response.ok) {
+    //     `Server responded with a status ${response.status}: ${JSON.stringify(data)}`
+    //   }
+
+    //   console.log(data);
+    // } catch(err) {
+    //   console.error('Error occurred while adding new subscription: ', err.message);
+    // }
+
+    fetch('/subscription', {  // Need to put in the whole string of url, not just the endpoint
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

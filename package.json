@@ -1,7 +1,8 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "armadollar-saver",
+  "description": "Pink Fairy Armadillo is here to save your dollar! Set up your budget and mage your subscriptions in an effective and fun way!",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "server": "nodemon server/server.js",
