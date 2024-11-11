@@ -42,7 +42,7 @@ const DashboardContainer = ({ userData }) => {
       <header className='w-full flex justify-between items-center bg-white p-4 rounded shadow-md'>
         <Icony />
         <h1 className='text-2xl font-bold text-indigo-600'>ArmaDollar Saver</h1>
-        <UserProfileDropdown />
+        <UserProfileDropdown userData={userData} />
       </header>
 
       {/* Budget and Add Subscription Button */}
