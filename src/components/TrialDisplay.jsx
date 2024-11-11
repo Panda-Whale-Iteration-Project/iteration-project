@@ -1,4 +1,4 @@
-//The TrialContainer will list all trials, 
+//The TrialContainer will list all trials,
 // while each TrialDisplay will render the details for each free trial, similar to SubscriptionDisplay.
 
 import React from 'react';
@@ -23,6 +23,7 @@ const TrialDisplay = () => {
 
 export default TrialDisplay;
 
+// OG code
 // import React from 'react';
 
 // const TrialDisplay = () => {
