@@ -116,16 +116,6 @@ class NotificationService {
             $gte: threeDaysFromNow,
             $lt: endOfDay,
           },
-          $or: [
-            { lastNotificationSent: null },
-            {
-              lastNotificationSent: {
-                $lt: new Date(
-                  threeDaysFromNow.getTime() - 30 * 24 * 60 * 60 * 1000
-                ),
-              },
-            },
-          ],
         })
         .toArray();
 
@@ -159,7 +149,6 @@ class NotificationService {
             { _id: { $in: subscriptionIds } },
             {
               $set: {
-                lastNotificationSent: new Date(),
                 nextPaymentDate: new Date(
                   threeDaysFromNow.getTime() + 30 * 24 * 60 * 60 * 1000
                 ),
