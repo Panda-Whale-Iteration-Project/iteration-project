@@ -1,19 +1,30 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
+const subscriptionRouter = express.Router();
 
-import subscriptionController from '../controllers/SubscriptionController.js'
+import subscriptionController from '../controllers/SubscriptionController.js';
 
-router.post('/', subscriptionController.createSubscription, (req, res)=>{
+subscriptionRouter.post(
+  '/',
+  subscriptionController.createSubscription,
+  (_req, res) => {
     res.status(200).json(res.locals.newSub);
-})
+  }
+);
 
-router.put('/:_id', subscriptionController.updateSubscription, (req, res)=>{
+subscriptionRouter.put(
+  '/:_id',
+  subscriptionController.updateSubscription,
+  (_req, res) => {
     res.status(200).json(res.locals.updatedSub);
-})
+  }
+);
 
-router.delete('/:_id', subscriptionController.deleteSubscription, (req, res)=>{
+subscriptionRouter.delete(
+  '/:_id',
+  subscriptionController.deleteSubscription,
+  (_req, res) => {
     res.status(200).json(res.locals.deletedSub);
-})
+  }
+);
 
-
-module.exports = router;
+export default subscriptionRouter;

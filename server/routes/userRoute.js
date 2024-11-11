@@ -1,18 +1,18 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
+const userRouter = express.Router();
 
-import userController from '../controllers/UserController.js'
+import userController from '../controllers/UserController.js';
 
 // router.get('/:_id or /:email, userController.getUser, (req, res) => {
 //   Do something...
 // });
 
-router.get('/', userController.getUser, (req, res)=>{
-    res.status(200).json(res.locals.foundUser)
-})
+userRouter.get('/:id', userController.getUser, (_req, res) => {
+  res.status(200).json({
+    user: res.locals.foundUser,
+    subscriptions: res.locals.subscriptions,
+    trials: res.locals.trials,
+  });
+});
 
-router.post('/', userController.createUser, (req, res)=>{
-    res.status(200).json(res.locals.createdUser)
-})
-
-module.exports = router;
+export default userRouter;

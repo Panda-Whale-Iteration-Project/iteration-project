@@ -12,7 +12,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "rollup": "^4.25.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -28,7 +27,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "rollup": "^4.25.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

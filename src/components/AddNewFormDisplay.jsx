@@ -55,13 +55,16 @@ const AddNewFormDisplay = ({ closePopup, userData }) => {
   // STATE INFO AND FUNCTIONS FOR FORM DATA
   // State for form data
 
+
   // Mark: make sure the labels are consistent throughout all files
   const [formData, setFormData] = useState({
     serviceName: '',
     paymentDate: '', //renewalDate
     subscriptionAmount: 0, //price
     details: '',
+    details: '',
     // subscriptionCategory: dropDownSelection,
+    // notifications: false,
     // notifications: false,
     // notificationFrequency: notificationSelection,
   });
@@ -87,9 +90,11 @@ const AddNewFormDisplay = ({ closePopup, userData }) => {
     { serviceName, renewalDate, notifyDate, price, category, details } = req.body
   */
 
+
   // Mark:
   // REQUIRED FIELDS: serviceName, renewalDate, notifyDate, price (Might change notifyDate so that it's not required)
   // OPTIONAL FIELDS: category, details
+  const handleSubmit = async (e) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -129,7 +134,21 @@ const AddNewFormDisplay = ({ closePopup, userData }) => {
           },
           body: JSON.stringify(toSend),
         });
+      // Use async/await:
+      try {
+        const response = await fetch('http://localhost:3000/subscription', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(toSend),
+        });
 
+        const data = await response.json();
+
+        if (!response.ok) {
+          `Server responded with a status ${response.status}: ${JSON.stringify(data)}`;
+        }
         const data = await response.json();
 
         if (!response.ok) {
@@ -143,7 +162,33 @@ const AddNewFormDisplay = ({ closePopup, userData }) => {
           err.message
         );
       }
+        console.log(data);
+      } catch (err) {
+        console.error(
+          'Error occurred while adding new subscription: ',
+          err.message
+        );
+      }
 
+      /*
+      fetch('/subscription', {
+        // Need to put in the whole string of url, not just the endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          body: JSON.stringify(toSend),
+        },
+    
+      // GETTING AN ERROR HERE
+      // AddNewFormDisplay.jsx:89 
+      //  POST http://localhost:5173/subscription net::ERR_ABORTED 404 (Not Found)
+    
+      }).then(() => {
+        console.log('succesfully sent to backend');
+      });
+      */
+      closePopup();
+    }
       /*
       fetch('/subscription', {
         // Need to put in the whole string of url, not just the endpoint
@@ -227,6 +272,7 @@ const AddNewFormDisplay = ({ closePopup, userData }) => {
           <div className='w-full md:w-1/2 px-3 mb-6 md:mb-0'>
             <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'>
               Category
+              Category
             </label>
 
             {/* SUBCRIPTION CATEGORY BUTTON*/}
@@ -266,11 +312,30 @@ const AddNewFormDisplay = ({ closePopup, userData }) => {
                 </div>
               )}
               <p className='text-gray-600 text-xs italic'>Optional.</p>
+              <p className='text-gray-600 text-xs italic'>Optional.</p>
             </div>
           </div>
         </div>
 
         {/* THIRD ROW OF ELEMENTS */}
+        <div className='flex flex-wrap -mx-3 mb-6'>
+          {/* DETAILS TEXT BOX */}
+          <div className='w-full md:full px-3 mb-6 md:mb-0'>
+            <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'>
+              Details
+            </label>
+            <input
+              className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+              name='details'
+              type='text'
+              onChange={handleInputChange}
+              autoComplete='off'
+            ></input>
+            <p className='text-gray-600 text-xs italic'>Optional.</p>
+          </div>
+        </div>
+
+        {/* FOURTH ROW OF ELEMENTS */}
         <div className='flex flex-wrap -mx-3 mb-6'>
           {/* DETAILS TEXT BOX */}
           <div className='w-full md:full px-3 mb-6 md:mb-0'>
@@ -309,6 +374,7 @@ const AddNewFormDisplay = ({ closePopup, userData }) => {
           </div>
         </div>
 
+        {/* OPTIONAL FIFTH ROW OF ELEMENTS, VISIBILITY DEPENDS ON NOTIFICATION TOGGLE*/}
         {/* OPTIONAL FIFTH ROW OF ELEMENTS, VISIBILITY DEPENDS ON NOTIFICATION TOGGLE*/}
         {notificationsVisibility && (
           <div className='flex flex-wrap -mx-3 mb-6'>
