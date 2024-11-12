@@ -1,6 +1,6 @@
 import React from 'react';
-import AddNewTitleDisplay from './AddNewTitleDisplay.jsx'
-import AddNewFormDisplay from './AddNewFormDisplay.jsx'
+import AddNewTitleDisplay from './AddNewTitleDisplay.jsx';
+import AddNewFormDisplay from './AddNewFormDisplay.jsx';
 
 // Pop up container
 const NewSubscriptionFormContainer = ({ closePopup, userData }) => {

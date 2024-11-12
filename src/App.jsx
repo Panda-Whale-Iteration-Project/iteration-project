@@ -86,22 +86,7 @@ function App() {
         <GoogleSignInButton />
       ) : (
         <>
-          <div className='flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md'>
-            <div className='relative w-8 h-8'>
-              <img
-                src={user?.authUser?.profilePhoto}
-                alt={user?.authUser?.displayName}
-                className='absolute inset-0 w-full h-full rounded-full border border-pink-200 object-cover'
-                referrerPolicy='no-referrer'
-              />
-            </div>
-            <span className='text-sm text-gray-600'>
-              {user?.authUser?.displayName}
-            </span>
-          </div>
-
           <HomepageContainer userData={user} />
-
           <button
             onClick={() =>
               (window.location.href = 'http://localhost:3000/auth/logout')
