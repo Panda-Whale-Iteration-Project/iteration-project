@@ -41,7 +41,9 @@ const DashboardContainer = ({ userData }) => {
       {/* Header with Icon and User Info */}
       <header className='w-full flex justify-between items-center bg-white p-4 rounded shadow-md'>
         <Icony />
-        <h1 className='text-3xl font-bold text-indigo-600'>ArmaDollar Saver</h1>
+        <h1 className='text-2xl font-bold text-indigo-600'>
+          SAVING YOU AN ARM & A TAIL
+        </h1>
         <UserProfileDropdown userData={userData} />
       </header>
 
