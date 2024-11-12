@@ -105,7 +105,7 @@ const AddNewFormDisplay = ({ closePopup, userData }) => {
 				userId: userData.subscriptionUser._id,
 				serviceName: formData.serviceName,
 				amount: parseInt(formData.subscriptionAmount),
-				status: 'active',
+				status: 'Active',
 				nextPaymentDate: formData.paymentDate,
 				category:
 					dropDownSelection != 'Select one' ? dropDownSelection : 'Other',

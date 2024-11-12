@@ -19,14 +19,14 @@ const subscriptionSchema = new Schema(
     status: {
       type: String,
       required: true,
-      default: 'active',
-      enum: ['active', 'inactive'],
+      default: 'Active',
+      enum: ['Active', 'Inactive'],
     },
     billingCycle: {
       type: String,
       required: true,
-      default: 'monthly',
-      enum: ['monthly', 'yearly', 'weekly'],
+      default: 'Monthly',
+      enum: ['Monthly', 'Yearly', 'Weekly'],
     },
     nextPaymentDate: {
       type: Date,
@@ -50,7 +50,7 @@ const subscriptionSchema = new Schema(
         'Food delivery', // DoorDash, Uber Eats Pass, etc.
         'Other', // Catch-all for misc subscriptions
       ],
-      default: 'other',
+      default: 'Other',
     },
     notifyDaysBefore: {
       type: Number,
