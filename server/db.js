@@ -4,13 +4,16 @@ import mongoose from 'mongoose';
 
 const connectDB = async () => {
   const MG_URI =
-	'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/';
-  
-  await mongoose.connect(MG_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    'mongodb+srv://r1mohamm:STz29egofuzuI3bC@armadollardb.0zmng.mongodb.net/?retryWrites=true&w=majority&appName=ArmaDollarDB';
+
+  await mongoose.connect(MG_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   mongoose.connection.once('open', () => {
     console.log('ArmaDollar Saver at your service!');
   });
-}
+};
 // const connectDB = async () => {
 //   try {
 //     await mongoose.connect(process.env.MONGODB_URI, {
