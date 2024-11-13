@@ -5,6 +5,7 @@ import TrialContainer from './TrialContainer.jsx';
 import BudgetContainer from './BudgetContainer.jsx';
 import AddNewContainer from './AddNewContainer.jsx';
 import AddNewButton from './AddNewButton.jsx';
+import AddTrialButton from './AddTrialButton.jsx';
 import UserProfileDropdown from './UserProfileDropdown.jsx';
 import Icony from './Icony.jsx';
 import NewSubscriptionFormContainer from './NewSubscriptionFormContainer.jsx';
@@ -50,7 +51,10 @@ const DashboardContainer = ({ userData }) => {
       {/* Budget and Add Subscription Button */}
       <div className='w-full flex justify-between items-center mt-4'>
         <BudgetContainer />
-        <AddNewButton onOpen={openPopup} />
+        <div>
+          <AddNewButton onOpen={openPopup} />
+          <AddTrialButton onOpen={openPopup} />
+        </div>
 
         {/* Conditionally Render the Popup */}
         {PopUpVisibility && (

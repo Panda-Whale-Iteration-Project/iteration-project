@@ -91,6 +91,27 @@ const SubscriptionDisplay = ({ userData }) => {
     }
   };
 
+  const handleDelete = async (subscriptionId) => {
+    if (window.confirm('Are you sure you want to delete this subscription?')) {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/subscription/${subscriptionId}`,
+          {
+            method: 'DELETE',
+          }
+        );
+        if (!response.ok) {
+          throw new Error('Failed to delete subscription');
+        }
+        setSubscriptionData((prevData) =>
+          prevData.filter((sub) => sub._id !== subscriptionId)
+        );
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  };
+
   return (
     <div className='border border-gray-200 mb-3 rounded flex-column justify-between items-center '>
       {subscriptionData.map((subscription) => (
@@ -190,14 +211,6 @@ const SubscriptionDisplay = ({ userData }) => {
                   <strong>Billing Cycle: </strong>
                   {subscription.billingCycle}
                 </p>
-                <p>
-                  <strong>Next Payment Date: </strong>
-                  {subscription.nextPaymentDate}
-                </p>
-                <p>
-                  <strong>Notify Days Before: </strong>
-                  {subscription.notifyDaysBefore}
-                </p>
               </div>
               <div className='flex space-x-2 mt-2'>
                 <button
@@ -206,7 +219,10 @@ const SubscriptionDisplay = ({ userData }) => {
                 >
                   Edit
                 </button>
-                <button className='text-red-600 hover:text-red-800'>
+                <button
+                  className='text-red-600 hover:text-red-800'
+                  onClick={() => handleDelete(subscription._id)}
+                >
                   Delete
                 </button>
                 <button className='text-gray-600 hover:text-gray-800'>
