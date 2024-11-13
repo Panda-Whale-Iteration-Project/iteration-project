@@ -67,6 +67,7 @@ app.use(
 );
 
 // Initialize Passport and restore authentication state from session
+// Passport is the Node.js authentication library being used to manage user login sessions.
 app.use(passport.initialize());
 app.use(passport.session());
 
