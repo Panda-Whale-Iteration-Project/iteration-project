@@ -4,7 +4,7 @@ const AddNewTitleDisplay = () => {
   return (
     <div>
       <h1 className='text-center font-extrabold text-gray-900 md:text-2xl'>
-        Add New Subscription
+        Subscription
       </h1>
     </div>
   );
