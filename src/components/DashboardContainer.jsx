@@ -13,6 +13,7 @@ import NewSubscriptionFormContainer from './NewSubscriptionFormContainer.jsx';
 const DashboardContainer = ({ userData }) => {
   // State and functions to open/close popup
   const [PopUpVisibility, setPopUpVisibility] = useState(false);
+  const [subscriptionData, setSubscriptionData] = useState([]);
 
   const openPopup = () => {
     setPopUpVisibility(true);
@@ -37,6 +38,10 @@ const DashboardContainer = ({ userData }) => {
   //   fetchData();
   // }, []);
 
+  const refreshSubscriptions = (newSubscription) => {
+    setSubscriptionData((prevData) => [...prevData, newSubscription]);
+  }
+
   return (
     <div className='flex flex-col items-center bg-gray-100 min-h-screen p-4'>
       {/* Header with Icon and User Info */}
@@ -58,6 +63,7 @@ const DashboardContainer = ({ userData }) => {
             <NewSubscriptionFormContainer
               closePopup={closePopup}
               userData={userData}
+              refreshSubscriptions={refreshSubscriptions}
             />
           </div>
         )}
@@ -67,7 +73,7 @@ const DashboardContainer = ({ userData }) => {
       <div className='w-full flex flex-col gap-4 mt-6'>
         <div className='flex flex-col flex-grow lg:flex-50 min-w-0'>
           <AddNewButton onOpen={openPopup} label='Add New Subscription' />
-          <SubscriptionContainer userData={userData} />
+          <SubscriptionContainer userData={userData} subscriptionData={subscriptionData} />
         </div>
 
         <div className='flex flex-col flex-grow lg:flex-50 min-w-0'>

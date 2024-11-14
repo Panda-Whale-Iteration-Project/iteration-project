@@ -9,8 +9,9 @@ import {
   DialogTitle,
 } from '@mui/material';
 
-const SubscriptionDisplayRearrange = ({ userData }) => {
-  const [subscriptionData, setSubscriptionData] = useState([]);
+const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
+  // const [subscriptionData, setSubscriptionData] = useState([]);
+  const [localData, setLocalData] = useState(subscriptionData);
   const [error, setError] = useState(null);
   const [editingSubscriptionId, setEditingSubscriptionId] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -25,23 +26,27 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const fetchSubscriptionsData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/user/${userData.subscriptionUser._id}`
-        );
-        if (!response.ok) {
-          throw new Error('Unable to fetch User data');
-        }
-        const data = await response.json();
-        setSubscriptionData(data.subscriptions);
+    setLocalData(subscriptionData);
+  }, [subscriptionData]);
+
+  // useEffect(() => {
+  //   const fetchSubscriptionsData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:3000/user/${userData.subscriptionUser._id}`
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error('Unable to fetch User data');
+  //       }
+  //       const data = await response.json();
+  //       setSubscriptionData(data.subscriptions);
 				console.log("data subscriptions: ", data.subscriptions)
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-    fetchSubscriptionsData();
-  }, [userData.subscriptionUser._id]);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     }
+  //   };
+  //   fetchSubscriptionsData();
+  // }, [userData.subscriptionUser._id]);
 
   const handleEditClick = (subscription) => {
     setEditingSubscriptionId(subscription._id);

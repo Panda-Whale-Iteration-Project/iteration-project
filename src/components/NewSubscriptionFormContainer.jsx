@@ -3,7 +3,7 @@ import AddNewTitleDisplay from './AddNewTitleDisplay.jsx';
 import AddNewFormDisplay from './AddNewFormDisplay.jsx';
 
 // Pop up container
-const NewSubscriptionFormContainer = ({ closePopup, userData }) => {
+const NewSubscriptionFormContainer = ({ closePopup, userData, refreshSubscriptions }) => {
   return (
     <div className='fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-65 z-50'>
       <div className='bg-white p-8 rounded-lg shadow-lg w-1/3'>
@@ -13,7 +13,7 @@ const NewSubscriptionFormContainer = ({ closePopup, userData }) => {
         </button>
         {/* Title and form */}
         <AddNewTitleDisplay />
-        <AddNewFormDisplay closePopup={closePopup} userData={userData} />
+        <AddNewFormDisplay closePopup={closePopup} userData={userData} refreshSubscriptions={refreshSubscriptions} />
       </div>
     </div>
   );
