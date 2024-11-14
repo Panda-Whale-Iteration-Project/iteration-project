@@ -16,8 +16,3 @@ const SubscriptionContainer = ({ userData, subscriptionData }) => {
 };
 
 export default SubscriptionContainer;
-<<<<<<< HEAD
-=======
-
-
->>>>>>> dev

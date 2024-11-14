@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
-  // const [subscriptionData, setSubscriptionData] = useState([]);
+  const [SubscriptionData, setSubscriptionData] = useState([]);
   const [localData, setLocalData] = useState(subscriptionData);
   const [error, setError] = useState(null);
   const [editingSubscriptionId, setEditingSubscriptionId] = useState(null);
@@ -29,24 +29,24 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
     setLocalData(subscriptionData);
   }, [subscriptionData]);
 
-  // useEffect(() => {
-  //   const fetchSubscriptionsData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:3000/user/${userData.subscriptionUser._id}`
-  //       );
-  //       if (!response.ok) {
-  //         throw new Error('Unable to fetch User data');
-  //       }
-  //       const data = await response.json();
-  //       setSubscriptionData(data.subscriptions);
+  useEffect(() => {
+    const fetchSubscriptionsData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/user/${userData.subscriptionUser._id}`
+        );
+        if (!response.ok) {
+          throw new Error('Unable to fetch User data');
+        }
+        const data = await response.json();
+        setSubscriptionData(data.subscriptions);
 				console.log("data subscriptions: ", data.subscriptions)
-  //     } catch (error) {
-  //       setError(error.message);
-  //     }
-  //   };
-  //   fetchSubscriptionsData();
-  // }, [userData.subscriptionUser._id]);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    fetchSubscriptionsData();
+  }, [userData.subscriptionUser._id]);
 
   const handleEditClick = (subscription) => {
     setEditingSubscriptionId(subscription._id);
@@ -178,7 +178,7 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
     <div style={{ height: 400, width: '100%' }}>
       {error && <p className='error'>{error}</p>}
       <DataGrid
-        rows={subscriptionData}
+        rows={SubscriptionData}
         columns={columns}
         getRowId={(row) => row._id}
         pageSize={1}
