@@ -199,7 +199,7 @@ const setupAuthRoutes = (app) => {
         return res.status(500).json({ error: 'Error logging out' });
       }
       console.log('👋 User logged out successfully');
-      res.redirect('/');
+      res.redirect('http://localhost:5173');
     });
   });
 
