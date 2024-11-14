@@ -55,7 +55,8 @@ const DashboardContainer = ({ userData }) => {
 
       {/* Budget and Add Subscription Button */}
       <div className='w-full flex justify-between items-center mt-4'>
-        <BudgetContainer />
+        <BudgetContainer userData={userData}/>
+        {/* <AddNewButton onOpen={openPopup} /> */}
 
         {/* Conditionally Render the Popup */}
         {PopUpVisibility && (

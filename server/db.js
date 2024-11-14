@@ -14,5 +14,4 @@ const connectDB = async () => {
     console.log('ArmaDollar Saver at your service!');
   });
 };
-
 export default connectDB;
