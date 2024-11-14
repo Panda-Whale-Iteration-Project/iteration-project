@@ -7,10 +7,10 @@ import TrialDisplayRearrange from './TrialDisplayRearrange';
 
 const TrialContainer = ({ userData }) => {
   return (
-    <div className='bg-white w-full md:w-1/2 p-4 rounded shadow-md'>
+    <div className='bg-white w-full p-4 rounded shadow-md'>
       <h2 className='text-xl font-bold text-indigo-600 mb-4'>Free Trials</h2>
+      {/* <TrialDisplay /> */}
       <TrialDisplayRearrange userData={userData} />
-      {/* Repeat TrialDisplay for each trial item */}
     </div>
   );
 };

@@ -3,16 +3,18 @@ const userRouter = express.Router();
 
 import userController from '../controllers/UserController.js';
 
-// router.get('/:_id or /:email, userController.getUser, (req, res) => {
-//   Do something...
-// });
-
 userRouter.get('/:_id', userController.getUser, (_req, res) => {
   res.status(200).json({
     user: res.locals.foundUser,
     subscriptions: res.locals.subscriptions,
     trials: res.locals.trials,
+    budget: res.locals.budget,
   });
 });
 
+//route to handle budget update
+
+userRouter.put('/:_id', userController.updateBudget, (_req, res) => {
+  res.status(200).json(res.locals.updatedBudget);
+});
 export default userRouter;

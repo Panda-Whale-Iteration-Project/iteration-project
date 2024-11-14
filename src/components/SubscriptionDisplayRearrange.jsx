@@ -9,8 +9,9 @@ import {
   DialogTitle,
 } from '@mui/material';
 
-const SubscriptionDisplayRearrange = ({ userData }) => {
-  const [subscriptionData, setSubscriptionData] = useState([]);
+const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
+  const [SubscriptionData, setSubscriptionData] = useState([]);
+  const [localData, setLocalData] = useState(subscriptionData);
   const [error, setError] = useState(null);
   const [editingSubscriptionId, setEditingSubscriptionId] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -25,6 +26,10 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    setLocalData(subscriptionData);
+  }, [subscriptionData]);
+
+  useEffect(() => {
     const fetchSubscriptionsData = async () => {
       try {
         const response = await fetch(
@@ -35,6 +40,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
         }
         const data = await response.json();
         setSubscriptionData(data.subscriptions);
+				console.log("data subscriptions: ", data.subscriptions)
       } catch (error) {
         setError(error.message);
       }
@@ -172,7 +178,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
     <div style={{ height: 400, width: '100%' }}>
       {error && <p className='error'>{error}</p>}
       <DataGrid
-        rows={subscriptionData}
+        rows={SubscriptionData}
         columns={columns}
         getRowId={(row) => row._id}
         pageSize={1}
