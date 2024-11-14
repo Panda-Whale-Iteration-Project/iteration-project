@@ -5,6 +5,7 @@ import TrialContainer from './TrialContainer.jsx';
 import BudgetContainer from './BudgetContainer.jsx';
 import AddNewContainer from './AddNewContainer.jsx';
 import AddNewButton from './AddNewButton.jsx';
+import AddTrialButton from './AddTrialButton.jsx';
 import UserProfileDropdown from './UserProfileDropdown.jsx';
 import Icony from './Icony.jsx';
 import NewSubscriptionFormContainer from './NewSubscriptionFormContainer.jsx';
@@ -12,6 +13,7 @@ import NewSubscriptionFormContainer from './NewSubscriptionFormContainer.jsx';
 const DashboardContainer = ({ userData }) => {
   // State and functions to open/close popup
   const [PopUpVisibility, setPopUpVisibility] = useState(false);
+  const [subscriptionData, setSubscriptionData] = useState([]);
 
   const openPopup = () => {
     setPopUpVisibility(true);
@@ -36,6 +38,10 @@ const DashboardContainer = ({ userData }) => {
   //   fetchData();
   // }, []);
 
+  const refreshSubscriptions = (newSubscription) => {
+    setSubscriptionData((prevData) => [...prevData, newSubscription]);
+  }
+
   return (
     <div className='flex flex-col items-center bg-gray-100 min-h-screen p-4'>
       {/* Header with Icon and User Info */}
@@ -50,7 +56,7 @@ const DashboardContainer = ({ userData }) => {
       {/* Budget and Add Subscription Button */}
       <div className='w-full flex justify-between items-center mt-4'>
         <BudgetContainer userData={userData}/>
-        <AddNewButton onOpen={openPopup} />
+        {/* <AddNewButton onOpen={openPopup} /> */}
 
         {/* Conditionally Render the Popup */}
         {PopUpVisibility && (
@@ -58,37 +64,26 @@ const DashboardContainer = ({ userData }) => {
             <NewSubscriptionFormContainer
               closePopup={closePopup}
               userData={userData}
+              refreshSubscriptions={refreshSubscriptions}
             />
           </div>
         )}
       </div>
 
       {/* Subscription and Trial Lists */}
-      <div className='w-full flex flex-col md:flex-row gap-4 mt-6'>
-        <SubscriptionContainer userData={userData} />
-        <TrialContainer />
+      <div className='w-full flex flex-col gap-4 mt-6'>
+        <div className='flex flex-col flex-grow lg:flex-50 min-w-0'>
+          <AddNewButton onOpen={openPopup} label='Add New Subscription' />
+          <SubscriptionContainer userData={userData} subscriptionData={subscriptionData} />
+        </div>
+
+        <div className='flex flex-col flex-grow lg:flex-50 min-w-0'>
+          <AddNewButton onOpen={openPopup} label='Add New Free Trial' />
+          <TrialContainer userData={userData} />
+        </div>
       </div>
     </div>
   );
 };
 
 export default DashboardContainer;
-
-// // OG Code
-// // import React from 'react';
-// // import TrialContainer from './TrialContainer.jsx';
-// // import SubscriptionContainer from './SubscriptionContainer.jsx';
-// // import AddNewContainer from './AddNewContainer.jsx';
-
-// // const DashboardContainer = () => {
-// //   return (
-// //     <div className='border border-indigo-600'>
-// //       <h1>DashboardContainer</h1>
-// //       <AddNewContainer />
-// //       <SubscriptionContainer />
-// //       <TrialContainer />
-// //     </div>
-// //   );
-// // };
-
-// // export default DashboardContainer;

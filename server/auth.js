@@ -183,6 +183,7 @@ const setupAuthRoutes = (app) => {
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res, next) => {
       // Add subscription user ID to request object
+      // user.subscriptionUser._id
       req.subscriptionUserId = req.user.subscriptionUser._id;
       res.redirect('http://localhost:5173');
       // next();
@@ -198,7 +199,7 @@ const setupAuthRoutes = (app) => {
         return res.status(500).json({ error: 'Error logging out' });
       }
       console.log('👋 User logged out successfully');
-      res.redirect('/');
+      res.redirect('http://localhost:5173');
     });
   });
 

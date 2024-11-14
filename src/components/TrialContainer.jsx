@@ -4,30 +4,16 @@
 
 import React from 'react';
 import TrialDisplay from './TrialDisplay.jsx';
+import TrialDisplayRearrange from './TrialDisplayRearrange.jsx';
 
-const TrialContainer = () => {
+const TrialContainer = ({ userData }) => {
 	return (
-		<div className='bg-white w-full md:w-1/2 p-4 rounded shadow-md'>
+		<div className='bg-white w-full p-4 rounded shadow-md'>
 			<h2 className='text-xl font-bold text-indigo-600 mb-4'>Free Trials</h2>
-			<TrialDisplay />
-			{/* Repeat TrialDisplay for each trial item */}
+			{/* <TrialDisplay /> */}
+			<TrialDisplayRearrange userData={userData}/>
 		</div>
 	);
 };
 
 export default TrialContainer;
-
-// OG code
-// import React from 'react';
-// import TrialDisplay from './TrialDisplay.jsx';
-
-// const TrialContainer = () => {
-//   return (
-//     <div className='border border-indigo-600'>
-//       <h1>TrialContainer</h1>
-//       <TrialDisplay/>
-//     </div>
-//   );
-// };
-
-// export default TrialContainer;

@@ -7,11 +7,12 @@ import Trial from '../models/TrialsModel.js';
 const userController = {};
 
 // userController middlewares
-
 //get a user and all their subscriptions/trials based on user ID
 userController.getUser = async (req, res, next) => {
   //grab userID from auth redirect
   const userID = req.params._id;
+  //grab userID from auth redirect
+  // const userID = req.params._id;
 
   try {
     await User.findById({ _id: userID }).then((result) => {
@@ -51,7 +52,36 @@ userController.getUser = async (req, res, next) => {
       },
     });
   }
+  //get all of users' subscriptions
+  try {
+    await Subscription.find({ userId: userID }).then((result) => {
+      console.log('🎉found subscriptions: ', result);
+      res.locals.subscriptions = result;
+    });
+  } catch (error) {
+    return next({
+      log: error,
+      status: 500,
+      message: {
+        err: "User's subscriptions were unable to be retrieved from the database.",
+      },
+    });
+  }
 
+  //get all of users' trials
+  try {
+    const trials = await Trial.find({ userId: userID });
+    res.locals.trials = trials;
+    return next();
+  } catch (error) {
+    return next({
+      log: error,
+      status: 500,
+      message: {
+        err: "User's trials were unable to be retrieved from the database.",
+      },
+    });
+  }
   //get all of users' trials
   try {
     const trials = await Trial.find({ userId: userID });
