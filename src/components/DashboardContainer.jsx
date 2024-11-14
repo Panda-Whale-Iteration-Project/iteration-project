@@ -69,7 +69,7 @@ const DashboardContainer = ({ userData }) => {
 
       {/* Subscription and Trial Lists */}
       <div className='w-full flex flex-col md:flex-row gap-4 mt-6'>
-        <SubscriptionContainer userData={userData} />
+        <SubscriptionContainer userData={userData} openPopup={openPopup} />
         <TrialContainer />
       </div>
     </div>

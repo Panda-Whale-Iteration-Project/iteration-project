@@ -1,7 +1,7 @@
 import { data } from 'autoprefixer';
 import React, { useEffect, useState } from 'react';
 
-const SubscriptionDisplay = ({ userData }) => {
+const SubscriptionDisplay = ({ userData, openPopup }) => {
   const [subscriptionData, setSubscriptionData] = useState([]);
   const [error, setError] = useState(null);
   const [editingSubscriptionId, setEditingSubscriptionId] = useState(null);
@@ -233,7 +233,10 @@ const SubscriptionDisplay = ({ userData }) => {
                 >
                   Delete
                 </button>
-                <button className='text-gray-600 hover:text-gray-800'>
+                <button
+                  className='text-gray-600 hover:text-gray-800'
+                  onClick={openPopup}
+                >
                   Toggle Notifications
                 </button>
               </div>
