@@ -9,9 +9,8 @@ import {
   DialogTitle,
 } from '@mui/material';
 
-const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
-  const [SubscriptionData, setSubscriptionData] = useState([]);
-  const [localData, setLocalData] = useState(subscriptionData);
+const SubscriptionDisplayRearrange = ({ userData, subsData, setSubsData }) => {
+  const [localData, setLocalData] = useState(subsData);
   const [error, setError] = useState(null);
   const [editingSubscriptionId, setEditingSubscriptionId] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -26,8 +25,8 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setLocalData(subscriptionData);
-  }, [subscriptionData]);
+    setLocalData(subsData);
+  }, [subsData]);
 
   useEffect(() => {
     const fetchSubscriptionsData = async () => {
@@ -39,8 +38,8 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
           throw new Error('Unable to fetch User data');
         }
         const data = await response.json();
-        setSubscriptionData(data.subscriptions);
-				console.log("data subscriptions: ", data.subscriptions)
+        setSubsData(data.subscriptions);
+        console.log('data subscriptions: ', data.subscriptions);
       } catch (error) {
         setError(error.message);
       }
@@ -83,7 +82,7 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
       const updatedSubscription = await response.json();
 
       // Update subscription data locally
-      setSubscriptionData((prevData) =>
+      setSubsData((prevData) =>
         prevData.map((sub) =>
           sub._id === editingSubscriptionId ? updatedSubscription : sub
         )
@@ -107,7 +106,7 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
         if (!response.ok) {
           throw new Error('Failed to delete subscription');
         }
-        setSubscriptionData((prevData) =>
+        setSubsData((prevData) =>
           prevData.filter((sub) => sub._id !== subscriptionId)
         );
       } catch (err) {
@@ -178,7 +177,7 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
     <div style={{ height: 400, width: '100%' }}>
       {error && <p className='error'>{error}</p>}
       <DataGrid
-        rows={SubscriptionData}
+        rows={subsData}
         columns={columns}
         getRowId={(row) => row._id}
         pageSize={1}
