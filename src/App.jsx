@@ -77,7 +77,8 @@ function App() {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-pink-100 to-pink-200 flex flex-col items-center justify-center gap-6'>
+    <div className='min-h-screen w-full bg-gradient-to-br from-pink-100 to-pink-200 flex flex-col items-center justify-center gap-6'>
+			{/* w-full p-4 rounded shadow-md */}
       <h1 className='text-4xl font-bold text-pink-600 hover:text-pink-700 transition-colors duration-300 shadow-lg p-6 rounded-xl bg-white/80 backdrop-blur-sm'>
         ArmaDollar Saver
       </h1>
@@ -87,7 +88,7 @@ function App() {
       ) : (
         <>
           <HomepageContainer userData={user} />
-          <button
+          {/* <button
             onClick={() =>
               (window.location.href = 'http://localhost:3000/auth/logout')
             }
@@ -95,7 +96,7 @@ function App() {
               hover:bg-pink-600 transition-colors duration-300'
           >
             Sign Out
-          </button>
+          </button> */}
         </>
       )}
     </div>

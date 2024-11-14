@@ -13,20 +13,9 @@ import NewSubscriptionFormContainer from './NewSubscriptionFormContainer.jsx';
 const DashboardContainer = ({ userData }) => {
   // State and functions to open/close popup
   const [PopUpVisibility, setPopUpVisibility] = useState(false);
-  const [subscriptionData, setSubscriptionData] = useState([]);
+  const [subsData, setSubsData] = useState([]);
   // State to identify form type - set to 'Subscription' or 'Trial' via 'AddNewButton'
   const [formType, setFormType] = useState('none');
-
-  // (WIP) Might use this later to customize 'AddNewButton' and the displayed form
-  // const handleAddNewButtonClick = (label) => {
-  //   console.log('label', label);
-  //   console.log('form type', formType);
-  //   label === 'Subscription'
-  //     ? setFormType('Subscription')
-  //     : setFormType('Trial');
-  //   console.log('form type after setting', formType);
-  //   openPopup();
-  // };
 
   const openPopup = () => {
     setPopUpVisibility(true);
@@ -36,23 +25,28 @@ const DashboardContainer = ({ userData }) => {
     setPopUpVisibility(false);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         'http://localhost:3000/user/673180385659763608645a3f'
-  //       );
-  //       const data = await response.json();
-  //       //setsubscriptions data
-  //     } catch (error) {
-  //       console.error('Error fetching subscriptions:', error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchSubscriptionsData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/user/${userData.subscriptionUser._id}`
+        );
+        if (!response.ok) {
+          throw new Error('Unable to fetch User data');
+        }
+        const data = await response.json();
+        setSubsData(data.subscriptions); // Initial load of subscriptions from backend
+      } catch (error) {
+        console.error('Error fetching subscriptions:', error);
+      }
+    };
+  
+    fetchSubscriptionsData();
+  }, [userData.subscriptionUser._id]);
+
 
   const refreshSubscriptions = (newSubscription) => {
-    setSubscriptionData((prevData) => [...prevData, newSubscription]);
+    setSubsData((prevData) => [...prevData, newSubscription]);
   };
 
   return (
@@ -89,7 +83,8 @@ const DashboardContainer = ({ userData }) => {
           <AddNewButton onOpen={openPopup} label='Add New Subscription' />
           <SubscriptionContainer
             userData={userData}
-            subscriptionData={subscriptionData}
+            subsData={subsData}
+            setSubsData={setSubsData}
           />
         </div>
 
