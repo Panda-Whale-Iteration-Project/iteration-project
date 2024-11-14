@@ -34,7 +34,13 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
           throw new Error('Unable to fetch User data');
         }
         const data = await response.json();
-        setSubscriptionData(data.subscriptions);
+        const convertedData = data.subscriptions.map((subscription) => ({
+          ...subscription,
+          nextPaymentDate: subscription.nextPaymentDate
+            ? new Date(subscription.nextPaymentDate).toISOString().split('T')[0]
+            : '',
+        }));
+        setSubscriptionData(convertedData);
       } catch (error) {
         setError(error.message);
       }
@@ -44,17 +50,22 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
 
   const handleEditClick = (subscription) => {
     setEditingSubscriptionId(subscription._id);
+    const formattedDate = subscription.nextPaymentDate
+      ? new Date(subscription.nextPaymentDate).toISOString().split('T')[0] // Only extract the date portion
+      : '';
     setEditFormData({
       serviceName: subscription.serviceName,
       category: subscription.category,
       amount: subscription.amount,
       status: subscription.status,
       billingCycle: subscription.billingCycle,
-      nextPaymentDate: subscription.nextPaymentDate,
+      nextPaymentDate: formattedDate,
       notifyDaysBefore: subscription.notifyDaysBefore,
     });
-    console.log('Subscription: ', subscription.nextPaymentDate);
-    console.log('Edit Form Data: ', editFormData.nextPaymentDate);
+    console.log(
+      'Formatted nextPaymentDate for EditFormData:',
+      editFormData.nextPaymentDate
+    );
     setOpen(true);
   };
   const handleEditSubmit = async (e) => {
@@ -67,7 +78,9 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(editFormData),
+          body: JSON.stringify({
+            ...editFormData,
+          }),
         }
       );
       if (!response.ok) {
@@ -114,6 +127,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
       ...editFormData,
       [e.target.name]: e.target.value,
     });
+    console.log('Edit Form Data: ', editFormData.nextPaymentDate);
   };
 
   const columns = [
@@ -143,8 +157,9 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
       type: 'date',
       width: 150,
       valueGetter: (params) =>
-        params.value ? new Date(params.value).toLocaleDateString() : '',
+        params.value ? new Date(params.value).toLocaleDateString('en-CA') : '',
     },
+
     {
       field: 'notifyDaysBefore',
       headerName: 'Notify Days Before',
