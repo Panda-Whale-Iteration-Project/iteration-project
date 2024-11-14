@@ -5,6 +5,7 @@ import TrialContainer from './TrialContainer.jsx';
 import BudgetContainer from './BudgetContainer.jsx';
 import AddNewContainer from './AddNewContainer.jsx';
 import AddNewButton from './AddNewButton.jsx';
+import AddTrialButton from './AddTrialButton.jsx';
 import UserProfileDropdown from './UserProfileDropdown.jsx';
 import Icony from './Icony.jsx';
 import NewSubscriptionFormContainer from './NewSubscriptionFormContainer.jsx';
@@ -50,7 +51,6 @@ const DashboardContainer = ({ userData }) => {
       {/* Budget and Add Subscription Button */}
       <div className='w-full flex justify-between items-center mt-4'>
         <BudgetContainer />
-        <AddNewButton onOpen={openPopup} />
 
         {/* Conditionally Render the Popup */}
         {PopUpVisibility && (
@@ -64,9 +64,16 @@ const DashboardContainer = ({ userData }) => {
       </div>
 
       {/* Subscription and Trial Lists */}
-      <div className='w-full flex flex-col md:flex-row gap-4 mt-6'>
-        <SubscriptionContainer userData={userData} />
-        <TrialContainer />
+      <div className='w-full flex flex-col gap-4 mt-6'>
+        <div className='flex flex-col flex-grow lg:flex-50 min-w-0'>
+          <AddNewButton onOpen={openPopup} label='Add New Subscription' />
+          <SubscriptionContainer userData={userData} />
+        </div>
+
+        <div className='flex-grow min-w-0'>
+          <AddNewButton onOpen={openPopup} label='Add New Free Trial' />
+          <TrialContainer />
+        </div>
       </div>
     </div>
   );

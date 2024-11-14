@@ -84,7 +84,7 @@ subscriptionController.deleteSubscription = async (req, res, next) => {
   const { _id } = req.params;
 
   try {
-    const deletedSub = Subscription.findByIdAndDelete(_id);
+    const deletedSub = await Subscription.findByIdAndDelete(_id);
     res.locals.deletedSub = deletedSub;
     return next();
   } catch (err) {
