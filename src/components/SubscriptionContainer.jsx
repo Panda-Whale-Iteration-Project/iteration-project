@@ -5,14 +5,14 @@ import React from 'react';
 import SubscriptionDisplayRearrange from './SubscriptionDisplayRearrange.jsx';
 
 const SubscriptionContainer = ({ userData }) => {
-	return (
-		<div className='bg-white w-full p-4 rounded shadow-md'>
-			<h2 className='text-xl font-bold text-indigo-600 mb-4'>Subscriptions</h2>
-			{/* <SubscriptionDisplay userData={userData} />  */}
-			<SubscriptionDisplayRearrange userData={userData} />
-			{/* Repeat SubscriptionDisplay for each subscription item */}
-		</div>
-	);
+  return (
+    <div className='bg-white w-full p-4 rounded shadow-md'>
+      <h2 className='text-xl font-bold text-indigo-600 mb-4'>Subscriptions</h2>
+      {/* <SubscriptionDisplay userData={userData} />  */}
+      <SubscriptionDisplayRearrange userData={userData} />
+      {/* Repeat SubscriptionDisplay for each subscription item */}
+    </div>
+  );
 };
 
 export default SubscriptionContainer;
