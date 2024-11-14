@@ -35,6 +35,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
         }
         const data = await response.json();
         setSubscriptionData(data.subscriptions);
+				console.log("data subscriptions: ", data.subscriptions)
       } catch (error) {
         setError(error.message);
       }

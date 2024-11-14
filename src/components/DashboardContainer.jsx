@@ -70,9 +70,9 @@ const DashboardContainer = ({ userData }) => {
           <SubscriptionContainer userData={userData} />
         </div>
 
-        <div className='flex-grow min-w-0'>
+        <div className='flex flex-col flex-grow lg:flex-50 min-w-0'>
           <AddNewButton onOpen={openPopup} label='Add New Free Trial' />
-          <TrialContainer />
+          <TrialContainer userData={userData} />
         </div>
       </div>
     </div>
@@ -80,22 +80,3 @@ const DashboardContainer = ({ userData }) => {
 };
 
 export default DashboardContainer;
-
-// // OG Code
-// // import React from 'react';
-// // import TrialContainer from './TrialContainer.jsx';
-// // import SubscriptionContainer from './SubscriptionContainer.jsx';
-// // import AddNewContainer from './AddNewContainer.jsx';
-
-// // const DashboardContainer = () => {
-// //   return (
-// //     <div className='border border-indigo-600'>
-// //       <h1>DashboardContainer</h1>
-// //       <AddNewContainer />
-// //       <SubscriptionContainer />
-// //       <TrialContainer />
-// //     </div>
-// //   );
-// // };
-
-// // export default DashboardContainer;
