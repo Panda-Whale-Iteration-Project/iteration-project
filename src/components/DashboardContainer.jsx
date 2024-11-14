@@ -13,6 +13,19 @@ import NewSubscriptionFormContainer from './NewSubscriptionFormContainer.jsx';
 const DashboardContainer = ({ userData }) => {
   // State and functions to open/close popup
   const [PopUpVisibility, setPopUpVisibility] = useState(false);
+  // State to identify form type - set to 'Subscription' or 'Trial' via 'AddNewButton'
+  const [formType, setFormType] = useState('none');
+
+  // (WIP) Might use this later to customize 'AddNewButton' and the displayed form
+  // const handleAddNewButtonClick = (label) => {
+  //   console.log('label', label);
+  //   console.log('form type', formType);
+  //   label === 'Subscription'
+  //     ? setFormType('Subscription')
+  //     : setFormType('Trial');
+  //   console.log('form type after setting', formType);
+  //   openPopup();
+  // };
 
   const openPopup = () => {
     setPopUpVisibility(true);
