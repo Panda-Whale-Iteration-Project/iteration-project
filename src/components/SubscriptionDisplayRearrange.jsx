@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 
 const SubscriptionDisplayRearrange = ({ userData }) => {
   const [subscriptionData, setSubscriptionData] = useState([]);
@@ -15,6 +22,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
     nextPaymentDate: '',
     notifyDaysBefore: '',
   });
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchSubscriptionsData = async () => {
@@ -45,6 +53,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
       nextPaymentDate: subscription.nextPaymentDate,
       notifyDaysBefore: subscription.notifyDaysBefore,
     });
+    setOpen(true);
   };
   const handleEditSubmit = async (e) => {
     e.preventDefault();
@@ -72,6 +81,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
         )
       );
       setEditingSubscriptionId(null); // Exit edit mode
+      setOpen(false);
     } catch (error) {
       setError(error.message);
     }
@@ -96,6 +106,12 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
         setError(err.message);
       }
     }
+  };
+  const handleFormChange = (e) => {
+    setEditFormData({
+      ...editFormData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const columns = [
@@ -139,13 +155,10 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
       width: 150,
       renderCell: (params) => (
         <div>
-          <Button color='primary' onClick={() => handleEditClick(params.id)}>
+          <Button color='primary' onClick={() => handleEditClick(params.row)}>
             Edit
           </Button>
-          <Button
-            color='secondary'
-            onClick={() => handleDeleteClick(params.id)}
-          >
+          <Button color='secondary' onClick={() => handleDelete(params.id)}>
             Delete
           </Button>
         </div>
@@ -165,6 +178,85 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
         checkboxSelection
         disableSelectionOnClick
       />
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Edit Subscription</DialogTitle>
+        <form onSubmit={handleEditSubmit}>
+          <DialogContent>
+            <TextField
+              name='serviceName'
+              label='Service Name'
+              value={editFormData.serviceName}
+              onChange={handleFormChange}
+              fullWidth
+              margin='dense'
+            />
+            <TextField
+              name='category'
+              label='Category'
+              value={editFormData.category}
+              onChange={handleFormChange}
+              fullWidth
+              margin='dense'
+            />
+            <TextField
+              name='amount'
+              label='Amount'
+              type='number'
+              value={editFormData.amount}
+              onChange={handleFormChange}
+              fullWidth
+              margin='dense'
+            />
+            <TextField
+              name='status'
+              label='Status'
+              value={editFormData.status}
+              onChange={handleFormChange}
+              fullWidth
+              margin='dense'
+            />
+            <TextField
+              name='billingCycle'
+              label='Billing Cycle'
+              value={editFormData.billingCycle}
+              onChange={handleFormChange}
+              fullWidth
+              margin='dense'
+            />
+            <TextField
+              name='nextPaymentDate'
+              label='Next Payment Date'
+              type='date'
+              value={editFormData.nextPaymentDate}
+              onChange={handleFormChange}
+              fullWidth
+              margin='dense'
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+            <TextField
+              name='notifyDaysBefore'
+              label='Notify Days Before'
+              type='number'
+              value={editFormData.notifyDaysBefore}
+              onChange={handleFormChange}
+              fullWidth
+              margin='dense'
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color='secondary'>
+              Cancel
+            </Button>
+            <Button type='submit' color='primary'>
+              Save
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     </div>
   );
 };
