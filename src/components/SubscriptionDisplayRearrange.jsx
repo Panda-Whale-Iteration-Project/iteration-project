@@ -11,7 +11,6 @@ import {
 
 const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
   const [SubscriptionData, setSubscriptionData] = useState([]);
-  const [SubscriptionData, setSubscriptionData] = useState([]);
   const [localData, setLocalData] = useState(subscriptionData);
   const [error, setError] = useState(null);
   const [editingSubscriptionId, setEditingSubscriptionId] = useState(null);
@@ -30,42 +29,38 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
     setLocalData(subscriptionData);
   }, [subscriptionData]);
 
-  // useEffect(() => {
-  //   const fetchSubscriptionsData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:3000/user/${userData.subscriptionUser._id}`
-  //       );
-  //       if (!response.ok) {
-  //         throw new Error('Unable to fetch User data');
-  //       }
-  //       const data = await response.json();
-  //       setSubscriptionData(data.subscriptions);
-  //     } catch (error) {
-  //       setError(error.message);
-  //     }
-  //   };
-  //   fetchSubscriptionsData();
-  // }, [userData.subscriptionUser._id]);
+  useEffect(() => {
+    const fetchSubscriptionsData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/user/${userData.subscriptionUser._id}`
+        );
+        if (!response.ok) {
+          throw new Error('Unable to fetch User data');
+        }
+        const data = await response.json();
+        setSubscriptionData(data.subscriptions);
+        console.log('data subscriptions: ', data.subscriptions);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    fetchSubscriptionsData();
+  }, [userData.subscriptionUser._id]);
 
   const handleEditClick = (subscription) => {
     setEditingSubscriptionId(subscription._id);
-    const formattedDate = subscription.nextPaymentDate
-      ? new Date(subscription.nextPaymentDate).toISOString().split('T')[0] // Only extract the date portion
-      : '';
     setEditFormData({
       serviceName: subscription.serviceName,
       category: subscription.category,
       amount: subscription.amount,
       status: subscription.status,
       billingCycle: subscription.billingCycle,
-      nextPaymentDate: formattedDate,
+      nextPaymentDate: subscription.nextPaymentDate,
       notifyDaysBefore: subscription.notifyDaysBefore,
     });
-    console.log(
-      'Formatted nextPaymentDate for EditFormData:',
-      editFormData.nextPaymentDate
-    );
+    console.log('Subscription: ', subscription.nextPaymentDate);
+    console.log('Edit Form Data: ', editFormData.nextPaymentDate);
     setOpen(true);
   };
   const handleEditSubmit = async (e) => {
@@ -78,9 +73,7 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            ...editFormData,
-          }),
+          body: JSON.stringify(editFormData),
         }
       );
       if (!response.ok) {
@@ -127,7 +120,6 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
       ...editFormData,
       [e.target.name]: e.target.value,
     });
-    console.log('Edit Form Data: ', editFormData.nextPaymentDate);
   };
 
   const columns = [
@@ -157,9 +149,8 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
       type: 'date',
       width: 150,
       valueGetter: (params) =>
-        params.value ? new Date(params.value).toLocaleDateString('en-CA') : '',
+        params.value ? new Date(params.value).toLocaleDateString() : '',
     },
-
     {
       field: 'notifyDaysBefore',
       headerName: 'Notify Days Before',
