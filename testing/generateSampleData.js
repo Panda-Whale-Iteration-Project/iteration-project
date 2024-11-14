@@ -76,7 +76,7 @@ const generateSampleData = () => {
 
 async function insertSampleData() {
   const uri =
-    'mongodb+srv://PinkFairyArmadillo:F5E0BmkMuHIFFhas@armadollar-saver.70puj.mongodb.net/';
+    'mongodb+srv://r1mohamm:STz29egofuzuI3bC@armadollardb.0zmng.mongodb.net/?retryWrites=true&w=majority&appName=ArmaDollarDB';
   const client = new MongoClient(uri);
 
   try {

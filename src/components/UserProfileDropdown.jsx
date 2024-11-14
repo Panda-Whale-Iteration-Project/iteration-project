@@ -59,6 +59,9 @@ const UserProfileDropdown = ({ userData }) => {
                          hover:bg-red-600 transition-colors duration-200 
                          font-medium text-sm flex items-center justify-center 
                          space-x-2 shadow-sm'
+              onClick={() =>
+                (window.location.href = 'http://localhost:3000/auth/logout')
+              }
             >
               <span>Logout</span>
             </button>
