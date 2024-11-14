@@ -18,7 +18,7 @@ const TrialDisplayRearrange = ({ userData }) => {
 				}
 
 				const data = await response.json();
-				setTrialData(data.trials);
+				setTrialData();
 
 			} catch (error) {
 				setError(error.message);
@@ -67,3 +67,5 @@ const TrialDisplayRearrange = ({ userData }) => {
 		</div>
 	)
 }
+
+export default TrialDisplayRearrange;
