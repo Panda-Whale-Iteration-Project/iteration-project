@@ -16,13 +16,42 @@ const trialSchema = new Schema({
     type: Date,
     required: [true, 'Expiration date is required'],
   },
-  notifyDate: {
-    type: Date,
-    required: [true, 'Date to notify expiration is required'],
+  // notifyDate: {
+  //   type: Date,
+  //   required: [true, 'Date to notify expiration is required'],
+  // },
+  notifyDaysBefore: {
+    type: Number,
+    default: 3,
+  },
+  status: {
+    type: String,
+    required: true,
+    default: 'Active',
+    enum: ['Active', 'Inactive'],
   },
   subCost: Number,
-  category: String,
-  detail: String,
+  category: {
+    type: String,
+    required: true,
+    enum: [
+      'Entertainment', // Netflix, Spotify, Disney+, etc.
+      'Productivity', // Microsoft 365, Adobe CC, etc.
+      'Utilities', // AWS, hosting services, etc.
+      'Gaming',
+      'Education',
+      'Health and fitness', // Peloton, MyFitnessPal Premium, etc.
+      'News and media', // NYTimes, WSJ, etc.
+      'Shopping', // Amazon Prime, Costco, etc.
+      'Social media', // LinkedIn Premium, Twitter Blue, etc.
+      'Security',
+      'Storage',
+      'Food delivery', // DoorDash, Uber Eats Pass, etc.
+      'Other', // Catch-all for misc subscriptions
+    ],
+    default: 'Other',
+  },
+  details: String,
 });
 
 const Trials = model('Trials', trialSchema);
