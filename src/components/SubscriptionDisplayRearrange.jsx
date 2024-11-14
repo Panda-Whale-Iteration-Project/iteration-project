@@ -53,6 +53,8 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
       nextPaymentDate: subscription.nextPaymentDate,
       notifyDaysBefore: subscription.notifyDaysBefore,
     });
+    console.log('Subscription: ', subscription.nextPaymentDate);
+    console.log('Edit Form Data: ', editFormData.nextPaymentDate);
     setOpen(true);
   };
   const handleEditSubmit = async (e) => {
@@ -231,11 +233,6 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
               onChange={handleFormChange}
               fullWidth
               margin='dense'
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
             />
             <TextField
               name='notifyDaysBefore'
