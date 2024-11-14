@@ -3,9 +3,18 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 
 const SubscriptionDisplayRearrange = ({ userData }) => {
-
   const [subscriptionData, setSubscriptionData] = useState([]);
   const [error, setError] = useState(null);
+  const [editingSubscriptionId, setEditingSubscriptionId] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    serviceName: '',
+    category: '',
+    amount: '',
+    status: '',
+    billingCycle: '',
+    nextPaymentDate: '',
+    notifyDaysBefore: '',
+  });
 
   useEffect(() => {
     const fetchSubscriptionsData = async () => {
@@ -25,18 +34,72 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
     fetchSubscriptionsData();
   }, [userData.subscriptionUser._id]);
 
-  const handleEditClick = (id) => {
-    // Logic for handling edit click
-    console.log("Edit subscription with ID:", id);
+  const handleEditClick = (subscription) => {
+    setEditingSubscriptionId(subscription._id);
+    setEditFormData({
+      serviceName: subscription.serviceName,
+      category: subscription.category,
+      amount: subscription.amount,
+      status: subscription.status,
+      billingCycle: subscription.billingCycle,
+      nextPaymentDate: subscription.nextPaymentDate,
+      notifyDaysBefore: subscription.notifyDaysBefore,
+    });
+  };
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `http://localhost:3000/subscription/${editingSubscriptionId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editFormData),
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to update subscription');
+      }
+
+      const updatedSubscription = await response.json();
+
+      // Update subscription data locally
+      setSubscriptionData((prevData) =>
+        prevData.map((sub) =>
+          sub._id === editingSubscriptionId ? updatedSubscription : sub
+        )
+      );
+      setEditingSubscriptionId(null); // Exit edit mode
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
-  const handleDeleteClick = (id) => {
-    // Logic for handling delete click
-    console.log("Delete subscription with ID:", id);
+  const handleDelete = async (subscriptionId) => {
+    if (window.confirm('Are you sure you want to delete this subscription?')) {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/subscription/${subscriptionId}`,
+          {
+            method: 'DELETE',
+          }
+        );
+        if (!response.ok) {
+          throw new Error('Failed to delete subscription');
+        }
+        setSubscriptionData((prevData) =>
+          prevData.filter((sub) => sub._id !== subscriptionId)
+        );
+      } catch (err) {
+        setError(err.message);
+      }
+    }
   };
 
   const columns = [
-    { field: 'serviceName', headerName: 'Service Name', width: 120},
+    { field: 'serviceName', headerName: 'Service Name', width: 120 },
     { field: 'category', headerName: 'Category', width: 120 },
     {
       field: 'amount',
@@ -60,7 +123,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
       field: 'nextPaymentDate',
       headerName: 'Next Payment Date',
       type: 'date',
-			width: 150,
+      width: 150,
       valueGetter: (params) =>
         params.value ? new Date(params.value).toLocaleDateString() : '',
     },
@@ -76,14 +139,11 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
       width: 150,
       renderCell: (params) => (
         <div>
-          <Button
-            color="primary"
-            onClick={() => handleEditClick(params.id)}
-          >
+          <Button color='primary' onClick={() => handleEditClick(params.id)}>
             Edit
           </Button>
           <Button
-            color="secondary"
+            color='secondary'
             onClick={() => handleDeleteClick(params.id)}
           >
             Delete
@@ -95,7 +155,7 @@ const SubscriptionDisplayRearrange = ({ userData }) => {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      {error && <p className="error">{error}</p>}
+      {error && <p className='error'>{error}</p>}
       <DataGrid
         rows={subscriptionData}
         columns={columns}
