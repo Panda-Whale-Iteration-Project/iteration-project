@@ -76,9 +76,9 @@ const DashboardContainer = ({ userData }) => {
           <SubscriptionContainer userData={userData} subscriptionData={subscriptionData} />
         </div>
 
-        <div className='flex-grow min-w-0'>
+        <div className='flex flex-col flex-grow lg:flex-50 min-w-0'>
           <AddNewButton onOpen={openPopup} label='Add New Free Trial' />
-          <TrialContainer />
+          <TrialContainer userData={userData} />
         </div>
       </div>
     </div>
