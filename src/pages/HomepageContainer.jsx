@@ -3,7 +3,7 @@ import DashboardContainer from '../components/DashboardContainer.jsx';
 
 const HomepageContainer = ({ userData }) => {
   return (
-    <div className='border border-indigo-600'>
+    <div className='border border-indigo-200 shadow-lg rounded-xl'>
       {/* <TitleDisplay /> */}
       <DashboardContainer userData={userData} />
     </div>
