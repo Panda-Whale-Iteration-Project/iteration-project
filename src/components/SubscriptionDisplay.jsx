@@ -211,6 +211,14 @@ const SubscriptionDisplay = ({ userData }) => {
                   <strong>Billing Cycle: </strong>
                   {subscription.billingCycle}
                 </p>
+                <p>
+                  <strong>notifyDaysBefore: </strong>
+                  {subscription.notifyDaysBefore}
+                </p>
+                <p>
+                  <strong>nextPaymentDate: </strong>
+                  {subscription.nextPaymentDate}
+                </p>
               </div>
               <div className='flex space-x-2 mt-2'>
                 <button
