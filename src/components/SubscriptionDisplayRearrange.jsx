@@ -11,6 +11,7 @@ import {
 
 const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
   const [SubscriptionData, setSubscriptionData] = useState([]);
+  const [SubscriptionData, setSubscriptionData] = useState([]);
   const [localData, setLocalData] = useState(subscriptionData);
   const [error, setError] = useState(null);
   const [editingSubscriptionId, setEditingSubscriptionId] = useState(null);
@@ -29,29 +30,23 @@ const SubscriptionDisplayRearrange = ({ userData, subscriptionData }) => {
     setLocalData(subscriptionData);
   }, [subscriptionData]);
 
-  useEffect(() => {
-    const fetchSubscriptionsData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/user/${userData.subscriptionUser._id}`
-        );
-        if (!response.ok) {
-          throw new Error('Unable to fetch User data');
-        }
-        const data = await response.json();
-        const convertedData = data.subscriptions.map((subscription) => ({
-          ...subscription,
-          nextPaymentDate: subscription.nextPaymentDate
-            ? new Date(subscription.nextPaymentDate).toISOString().split('T')[0]
-            : '',
-        }));
-        setSubscriptionData(convertedData);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-    fetchSubscriptionsData();
-  }, [userData.subscriptionUser._id]);
+  // useEffect(() => {
+  //   const fetchSubscriptionsData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:3000/user/${userData.subscriptionUser._id}`
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error('Unable to fetch User data');
+  //       }
+  //       const data = await response.json();
+  //       setSubscriptionData(data.subscriptions);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     }
+  //   };
+  //   fetchSubscriptionsData();
+  // }, [userData.subscriptionUser._id]);
 
   const handleEditClick = (subscription) => {
     setEditingSubscriptionId(subscription._id);
